@@ -37,6 +37,7 @@ export type Page<T> = {
   numberOfElements?: number;
 };
 
+
 // ========= 에러 타입 =========
 export class ApiError extends Error {
   status: number;
