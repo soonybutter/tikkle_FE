@@ -3,18 +3,27 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import GoalDetail from './pages/GoalDetail';
 import Header from './components/Header';
-
+import GoalNew from './pages/GoalNew';
+import RequireAuth from './routes/RequireAuth';
 
 export default function App() {
   return (
     <>
       <Header />
       <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/goals/:id" element={<GoalDetail />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* 공개 라우트 */}
+        <Route path="/login" element={<Login />} />
+
+        {/* 보호 라우트 */}
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/goals/new" element={<GoalNew />} />
+          <Route path="/goals/:id" element={<GoalDetail />} />
+        </Route>
+
+        {/* fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </>
   );
 }

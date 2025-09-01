@@ -1,10 +1,11 @@
-// src/pages/Dashboard.tsx
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Goals, Auth, ApiError } from '../api';
 import type { GoalSummaryDto } from '../api';
 type FieldError = { msg: string; field?: string };
 type ErrorPayload = { errors: FieldError[] };
+
+
 
 /** 새 목표 생성 폼 */
 function CreateGoalForm({ onCreated }: { onCreated: () => void }) {
@@ -114,6 +115,9 @@ export default function Dashboard() {
 
       {/* 새 목표 만들기 */}
       <CreateGoalForm onCreated={load} />
+      <p style={{ margin: '12px 0' }}>
+        <Link to="/goals/new">+ 새 목표 만들기</Link>
+      </p>
 
       {/* 목록 */}
       <ul style={{ listStyle: 'none', padding: 0 }}>

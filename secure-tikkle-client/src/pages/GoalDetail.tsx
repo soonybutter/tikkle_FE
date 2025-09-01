@@ -1,103 +1,117 @@
-// src/pages/GoalDetail.tsx
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import { Goals, Savings, Auth, ApiError } from '../api';
+import type { GoalDetailDto, SavingsLogDto, Page } from '../api';
 
-// 값(value)은 일반 import
-import { Goals, Auth, ApiError } from '../api';
+type FieldError = { msg: string; field?: string };
+type ErrorPayload = { ok?: boolean; errors: FieldError[] };
 
-// 타입은 type-only import (verbatimModuleSyntax=true 대응)
-import type { GoalDetailDto, Page, SavingsLogDto } from '../api';
+// 백엔드 에러 페이로드 타입가드 (any 금지)
+const isErrorPayload = (v: unknown): v is ErrorPayload => {
+  if (!v || typeof v !== 'object') return false;
+  const errors = (v as { errors?: unknown }).errors;
+  return Array.isArray(errors) && errors.every(
+    (e): e is FieldError =>
+      !!e &&
+      typeof e === 'object' &&
+      'msg' in e &&
+      typeof (e as { msg: unknown }).msg === 'string'
+  );
+};
 
 export default function GoalDetail() {
-  const { id: idParam } = useParams();
-  const goalId = Number(idParam);
-  const nav = useNavigate();
+  const { id } = useParams();
+  const goalId = Number(id);
 
   const [detail, setDetail] = useState<GoalDetailDto | null>(null);
   const [logs, setLogs] = useState<Page<SavingsLogDto> | null>(null);
-  const [page, setPage] = useState(0);
-  const [size] = useState(5);
-  const [loading, setLoading] = useState(true);
+
+  const [amount, setAmount] = useState<number | ''>('');
+  const [memo, setMemo] = useState('');
+  const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    if (!Number.isFinite(goalId)) {
-      setErr('잘못된 목표 ID 입니다.');
-      setLoading(false);
-      return;
-    }
+    setErr(null);
+    const me = await Auth.me();
+    if (!me.authenticated) throw new Error('not-auth');
 
+    const [d, page] = await Promise.all([
+      Goals.detail(goalId),
+      Goals.logs(goalId, 0, 10),
+    ]);
+    setDetail(d);
+    setLogs(page);
+  }, [goalId]);
+
+  useEffect(() => { void load(); }, [load]);
+
+  const onSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
+    if (amount === '' || Number.isNaN(Number(amount))) return;
+
+    setBusy(true);
+    setErr(null);
     try {
-      setLoading(true);
-      const me = await Auth.me();
-      if (!me.authenticated) {
-        nav('/login');
-        return;
-      }
-
-      const [d, pl] = await Promise.all([
-        Goals.detail(goalId),
-        Goals.logs(goalId, page, size),
-      ]);
-      setDetail(d);
-      setLogs(pl);
-      setErr(null);
+      await Savings.create({ goalId, amount: Number(amount), memo });
+      setAmount('');
+      setMemo('');
+      await load();
     } catch (e: unknown) {
-      const msg = e instanceof ApiError ? e.message : '네트워크 오류';
-      setErr(msg);
+      if (e instanceof ApiError) {
+        const data = (e as unknown as { status: number; data?: unknown }).data;
+        if (isErrorPayload(data)) {
+          setErr(data.errors.map((x) => x.msg).join(', '));
+        } else {
+          setErr(`요청 실패 (HTTP ${e.status ?? '??'})`);
+        }
+      } else {
+        setErr('저축 기록 실패');
+      }
     } finally {
-      setLoading(false);
+      setBusy(false);
     }
-  }, [goalId, page, size, nav]);
+  };
 
-  useEffect(() => {
-    void load();
-  }, [load]);
-
-  if (loading) return <div>Loading…</div>;
-  if (err) return <div role="alert">{err}</div>;
-  if (!detail) return <div>데이터 없음</div>;
+  if (!detail) return <div>Loading…</div>;
 
   return (
     <main style={{ maxWidth: 720, margin: '2rem auto', padding: '0 1rem' }}>
+      <Link to="/">&larr; 목록</Link>
       <h1>{detail.title}</h1>
-      <p>
-        {detail.currentAmount} / {detail.targetAmount}원 ({detail.progress}%)
-      </p>
+
+      <div style={{ margin: '8px 0' }}>
+        {detail.currentAmount.toLocaleString()} / {detail.targetAmount.toLocaleString()}원
+      </div>
+      <div style={{ color: '#666', marginBottom: 8 }}>진행률 {detail.progress}%</div>
+
+      <form onSubmit={onSubmit} style={{ display: 'flex', gap: 8, margin: '12px 0' }}>
+        <input
+          type="number"
+          placeholder="금액"
+          min={1}
+          value={amount}
+          onChange={(ev) => setAmount(ev.target.value === '' ? '' : Number(ev.target.value))}
+          required
+        />
+        <input
+          placeholder="메모 (선택)"
+          value={memo}
+          onChange={(ev) => setMemo(ev.target.value)}
+        />
+        <button disabled={busy}>저축 기록</button>
+      </form>
+      {err && <div style={{ color: 'crimson' }}>{err}</div>}
 
       <h2>저축 로그</h2>
-      {logs && logs.content.length > 0 ? (
-        <>
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {logs.content.map((l: SavingsLogDto) => (
-              <li key={l.id} style={{ padding: '12px 0', borderBottom: '1px solid #eee' }}>
-                <div>
-                  <strong>+{l.amount.toLocaleString()}원</strong>{' '}
-                  <span style={{ color: '#666' }}>{l.memo ?? ''}</span>
-                </div>
-                <div style={{ fontSize: 12, color: '#999' }}>{l.createdAt}</div>
-              </li>
-            ))}
-          </ul>
-
-          <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
-            <button disabled={page <= 0} onClick={() => setPage((p) => Math.max(0, p - 1))}>
-              이전
-            </button>
-            <button
-              disabled={logs.last}
-              onClick={() => setPage((p) => p + 1)}
-            >
-              다음
-            </button>
-            <span style={{ marginLeft: 8 }}>
-              {logs.number + 1} / {logs.totalPages || 1}
-            </span>
-          </div>
-        </>
-      ) : (
-        <p>로그가 없습니다.</p>
-      )}
+      <ul style={{ listStyle: 'none', padding: 0 }}>
+        {logs?.content.map((l) => (
+          <li key={l.id} style={{ padding: '8px 0', borderBottom: '1px solid #eee' }}>
+            <div>{l.amount.toLocaleString()}원 — {l.memo ?? ''}</div>
+            <small>{new Date(l.createdAt).toLocaleString()}</small>
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }

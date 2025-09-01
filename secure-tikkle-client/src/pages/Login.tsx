@@ -4,7 +4,7 @@ import { Auth } from '../api';
 
 export default function Login() {
   const nav = useNavigate();
-  const API = (import.meta.env.VITE_API_URL as string) || '';
+  const API = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
   useEffect(() => {
     // 이미 로그인된 경우 대시보드로
