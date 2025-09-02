@@ -18,10 +18,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
 
   if (!res.ok) {
-    let data: unknown;
-    try { data = await res.json(); } catch {}
+    const data: unknown = await res.json().catch(() => undefined);
     throw new ApiError(res.status, data);
   }
+  
   // 204 같은 경우 빈 바디일 수 있음
   if (res.status === 204) return undefined as T;
   return (await res.json()) as T;
@@ -57,6 +57,15 @@ export type SavingsLogDto = {
   amount: number;
   memo?: string | null;
   createdAt: string; // ISO
+};
+
+export type BadgeDto ={
+  code: string;
+  title: string;
+  description: string;
+  icon: string;
+  earned: boolean;
+  earnedAt?: string;
 };
 
 export type Page<T> = {
@@ -106,4 +115,8 @@ export const Savings = {
   create: (p: { goalId: number; amount: number; memo?: string }) =>
     post<SavingsLogDto>('/api/savings-logs', p),
   
+};
+
+export const Badges = {
+  list: () => get<BadgeDto[]>('/api/badges'),
 };

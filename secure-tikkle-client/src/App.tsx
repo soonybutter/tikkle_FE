@@ -5,6 +5,7 @@ import GoalDetail from './pages/GoalDetail';
 import Header from './components/Header';
 import GoalNew from './pages/GoalNew';
 import RequireAuth from './routes/RequireAuth';
+import BadgesPage from './pages/Badges';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/goals/new" element={<GoalNew />} />
           <Route path="/goals/:id" element={<GoalDetail />} />
+          <Route path="/badges" element={<BadgesPage />} />
         </Route>
 
         {/* fallback */}

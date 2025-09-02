@@ -1,12 +1,12 @@
-.root {
-  background: #eee;
-  border-radius: 8px;
-  height: 10px;
-  overflow: hidden;
-}
+@import "../styles/tokens.css";
 
-.bar {
+.progress {
+  width: 100%; height: 10px; background: #eceff4;
+  border-radius: 999px; overflow: hidden;
+}
+.progress__bar{
   height: 100%;
-  background: linear-gradient(90deg, #ffe6fe, #3B82F6);
-  transition: width .3s ease;
+  background: linear-gradient(90deg, #65d37b, #3bb35e);
+  width: var(--value, 0%);
+  transition: width .45s ease;   
 }

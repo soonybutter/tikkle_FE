@@ -18,6 +18,7 @@ export default function Header() {
       <nav className={styles.nav}>
         <Link to="/" className={styles.brand}>티끌</Link>
         <Link to="/goals/new">새 목표</Link>
+        <Link to="/badges">배지</Link>
         <span className={styles.spacer}>{name ? `${name} 님` : '로그인 필요'}</span>
       </nav>
     </header>
