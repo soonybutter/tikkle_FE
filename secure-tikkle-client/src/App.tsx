@@ -6,26 +6,28 @@ import Header from './components/Header';
 import GoalNew from './pages/GoalNew';
 import RequireAuth from './routes/RequireAuth';
 import BadgesPage from './pages/Badges';
+import BadgeAnnouncerProvider from './providers/BadgeAnnouncerProvider';
 
 export default function App() {
   return (
-    <>
+    <BadgeAnnouncerProvider>
       <Header />
-      <Routes>
-        {/* 공개 라우트 */}
-        <Route path="/login" element={<Login />} />
+        <Routes>
+          {/* 공개 라우트 */}
+          <Route path="/login" element={<Login />} />
 
-        {/* 보호 라우트 */}
-        <Route element={<RequireAuth />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/goals/new" element={<GoalNew />} />
-          <Route path="/goals/:id" element={<GoalDetail />} />
-          <Route path="/badges" element={<BadgesPage />} />
-        </Route>
+          {/* 보호 라우트 */}
+          <Route element={<RequireAuth />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/goals/new" element={<GoalNew />} />
+            <Route path="/goals/:id" element={<GoalDetail />} />
+            <Route path="/badges" element={<BadgesPage />} />
+          </Route>
 
-        {/* fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </>
+          {/* fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+    </BadgeAnnouncerProvider>
+      
   );
 }

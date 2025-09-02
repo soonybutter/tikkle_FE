@@ -1,0 +1,95 @@
+/* 전체 배경 */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+}
+
+/* 카드 컨테이너 */
+.card {
+  width: min(520px, 92vw);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 30px 70px rgba(0,0,0,.25);
+  overflow: hidden;
+}
+
+/* 내부 레이아웃 */
+.inner {
+  padding: 28px 24px;
+  text-align: center;
+}
+
+/* 아이콘 링 */
+.iconRing {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 12px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #fff8, transparent 60%),
+              linear-gradient(135deg, #ffe8a3, #ffd280);
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,.08), 0 10px 24px rgba(0,0,0,.12);
+}
+
+/* 아이콘 */
+.iconLarge {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+/* 제목 + 획득 Pill */
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 8px 0 6px;
+  letter-spacing: .2px;
+}
+
+.pill {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a1a1a;
+  background: #ffe27a;
+  border-radius: 999px;
+}
+
+/* 설명/메타 */
+.desc {
+  color: #555;
+  margin: 0 0 8px;
+}
+
+.meta {
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+/* 버튼 영역 */
+.actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.closeBtn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 0;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+}
+.closeBtn:hover {
+  background: #111;
+}

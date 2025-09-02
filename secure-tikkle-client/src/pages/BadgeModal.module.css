@@ -1,0 +1,84 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 18, 23, 0.5);
+  backdrop-filter: blur(2px);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 40;
+}
+
+.card {
+  width: 100%;
+  max-width: 520px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 22px 60px rgba(0,0,0,.2);
+  border: 1px solid rgba(0,0,0,.06);
+  overflow: hidden;
+}
+
+.inner {
+  padding: 20px 18px 18px;
+  display: grid;
+  gap: 10px;
+  text-align: center;
+}
+
+.iconRing {
+  margin: 6px auto 2px;
+  width: 84px; height: 84px;
+  border-radius: 50%;
+  background: radial-gradient(110px 60px at 50% -10%, #fef3c7, transparent),
+              #fff7ed;
+  display: grid; place-items: center;
+  border: 1px solid #fde68a;
+}
+.iconLarge {
+  width: 54px; height: 54px; object-fit: contain;
+}
+
+.title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 2px 0 0;
+}
+
+.pill {
+  margin-left: 8px;
+  font-size: .75rem;
+  background: #4f46e5;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 999px;
+  vertical-align: middle;
+}
+
+.desc {
+  color: #4b5563;
+  font-size: .95rem;
+  margin-top: 2px;
+}
+
+.meta {
+  color: #6b7280;
+  font-size: .85rem;
+}
+
+.actions {
+  margin-top: 6px;
+  display: flex;
+  justify-content: center;
+}
+
+.closeBtn {
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  cursor: pointer;
+}
+.closeBtn:hover {
+  background: #f3f4f6;
+}

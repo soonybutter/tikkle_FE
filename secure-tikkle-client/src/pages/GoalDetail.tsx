@@ -1,8 +1,10 @@
+import { useBadgeAnnouncer } from '../hooks/useBadgeAnnouncer';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Goals, Savings, Auth, ApiError } from '../api';
 import type { GoalDetailDto, SavingsLogDto, Page } from '../api';
 import styles from './GoalDetail.module.css';
+
 
 type FieldError = { msg: string; field?: string };
 type ErrorPayload = { ok?: boolean; errors: FieldError[] };
@@ -27,6 +29,8 @@ export default function GoalDetail() {
   const [memo, setMemo] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const { triggerScan } = useBadgeAnnouncer();
+
 
   const load = useCallback(async () => {
     setErr(null);
@@ -54,6 +58,10 @@ export default function GoalDetail() {
       setAmount('');
       setMemo('');
       await load();
+
+      // 새 배지 획득 여부 확인 → 새로 생긴 배지 있으면 자동 팝업+콘페티
+      await triggerScan();
+
     } catch (e: unknown) {
       if (e instanceof ApiError) {
         const data = (e as unknown as { status: number; data?: unknown }).data;
