@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Auth } from '../api';
+import type { MeResponse as ApiMeResponse } from '../api';
 
-type MeOk = { authenticated: true; attributes: { id: number; name?: string; provider?: string; email?: string } };
-type MeNo = { authenticated: false };
-type Me = MeOk | MeNo;
+type Attributes = NonNullable<ApiMeResponse['attributes']>;
+
+type Me =
+  | { authenticated: true; attributes: Attributes }
+  | { authenticated: false };
+
+function normalizeMe(resp: ApiMeResponse): Me {
+  if (resp.authenticated && resp.attributes && typeof resp.attributes.id === 'number') {
+    return { authenticated: true, attributes: resp.attributes };
+  }
+  return { authenticated: false };
+}
 
 export function useSession() {
   const [me, setMe] = useState<Me | null>(null);
@@ -12,8 +22,8 @@ export function useSession() {
   const refresh = async () => {
     setLoading(true);
     try {
-      const data = await Auth.me();
-      setMe(data);
+      const data: ApiMeResponse = await Auth.me();
+      setMe(normalizeMe(data));
     } catch {
       setMe({ authenticated: false });
     } finally {
@@ -21,7 +31,7 @@ export function useSession() {
     }
   };
 
-  useEffect(() => { refresh(); }, []);
+  useEffect(() => { void refresh(); }, []);
 
   return { me, loading, refresh };
 }
