@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Goals, ApiError } from '../api';
+import styles from './GoalNew.module.css';
 
 type FieldError = { msg: string; field?: string };
 type ErrorPayload = { ok?: boolean; errors: FieldError[] };
@@ -9,11 +10,9 @@ function toErrorPayload(v: unknown): ErrorPayload | null {
   if (!v || typeof v !== 'object') return null;
   const errors = (v as { errors?: unknown }).errors;
   if (!Array.isArray(errors)) return null;
-  if (
-    !errors.every(
-      (e) => !!e && typeof e === 'object' && 'msg' in e && typeof (e as { msg: unknown }).msg === 'string'
-    )
-  ) return null;
+  if (!errors.every((e) => !!e && typeof e === 'object' && 'msg' in e && typeof (e as { msg: unknown }).msg === 'string')) {
+    return null;
+  }
   return { errors: errors as FieldError[] };
 }
 
@@ -30,7 +29,7 @@ export default function GoalNew() {
     setBusy(true);
     try {
       await Goals.create({ title, targetAmount: Number(targetAmount) });
-      nav('/'); // 생성 후 대시보드로 이동
+      nav('/');
     } catch (e) {
       if (e instanceof ApiError) {
         const data = (e as { status: number; data?: unknown }).data;
@@ -45,10 +44,10 @@ export default function GoalNew() {
   };
 
   return (
-    <main style={{ maxWidth: 720, margin: '2rem auto', padding: '0 1rem' }}>
+    <main className={styles.main}>
       <h1>새 목표 만들기</h1>
-      <form onSubmit={submit} style={{ display: 'grid', gap: 12, maxWidth: 420 }}>
-        <label style={{ display: 'grid', gap: 6 }}>
+      <form className={styles.form} onSubmit={submit}>
+        <label className={styles.label}>
           <span>목표 이름</span>
           <input
             value={title}
@@ -57,7 +56,7 @@ export default function GoalNew() {
             required
           />
         </label>
-        <label style={{ display: 'grid', gap: 6 }}>
+        <label className={styles.label}>
           <span>목표 금액</span>
           <input
             type="number"
@@ -69,13 +68,11 @@ export default function GoalNew() {
           />
         </label>
         <button
-          disabled={
-            busy || title.trim() === '' || targetAmount === '' || Number(targetAmount) <= 0
-          }
+          disabled={busy || title.trim() === '' || targetAmount === '' || Number(targetAmount) <= 0}
         >
           {busy ? '만드는 중…' : '만들기'}
         </button>
-        {err && <div role="alert" style={{ color: 'crimson' }}>{err}</div>}
+        {err && <div role="alert" className={styles.error}>{err}</div>}
       </form>
     </main>
   );

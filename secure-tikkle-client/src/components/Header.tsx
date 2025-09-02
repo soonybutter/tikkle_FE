@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Auth } from '../api';
+import styles from './Header.module.css';
 
 export default function Header() {
   const [name, setName] = useState<string | null>(null);
@@ -13,13 +14,11 @@ export default function Header() {
   }, []);
 
   return (
-    <header style={{ padding: '12px 16px', borderBottom: '1px solid #eee' }}>
-      <nav style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-        <Link to="/">티끌</Link>
-        <Link to="/goals/new">새 목표</Link> 
-        <span style={{ marginLeft: 'auto', color: '#666' }}>
-          {name ? `${name} 님` : '로그인 필요'}
-        </span>
+    <header className={styles.header}>
+      <nav className={styles.nav}>
+        <Link to="/" className={styles.brand}>티끌</Link>
+        <Link to="/goals/new">새 목표</Link>
+        <span className={styles.spacer}>{name ? `${name} 님` : '로그인 필요'}</span>
       </nav>
     </header>
   );

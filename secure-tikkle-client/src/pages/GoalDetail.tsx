@@ -2,20 +2,17 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Goals, Savings, Auth, ApiError } from '../api';
 import type { GoalDetailDto, SavingsLogDto, Page } from '../api';
+import styles from './GoalDetail.module.css';
 
 type FieldError = { msg: string; field?: string };
 type ErrorPayload = { ok?: boolean; errors: FieldError[] };
 
-// 백엔드 에러 페이로드 타입가드 (any 금지)
 const isErrorPayload = (v: unknown): v is ErrorPayload => {
   if (!v || typeof v !== 'object') return false;
   const errors = (v as { errors?: unknown }).errors;
   return Array.isArray(errors) && errors.every(
     (e): e is FieldError =>
-      !!e &&
-      typeof e === 'object' &&
-      'msg' in e &&
-      typeof (e as { msg: unknown }).msg === 'string'
+      !!e && typeof e === 'object' && 'msg' in e && typeof (e as { msg: unknown }).msg === 'string'
   );
 };
 
@@ -76,16 +73,16 @@ export default function GoalDetail() {
   if (!detail) return <div>Loading…</div>;
 
   return (
-    <main style={{ maxWidth: 720, margin: '2rem auto', padding: '0 1rem' }}>
+    <main className={styles.main}>
       <Link to="/">&larr; 목록</Link>
       <h1>{detail.title}</h1>
 
-      <div style={{ margin: '8px 0' }}>
+      <div className={styles.amount}>
         {detail.currentAmount.toLocaleString()} / {detail.targetAmount.toLocaleString()}원
       </div>
-      <div style={{ color: '#666', marginBottom: 8 }}>진행률 {detail.progress}%</div>
+      <div className={styles.progressText}>진행률 {detail.progress}%</div>
 
-      <form onSubmit={onSubmit} style={{ display: 'flex', gap: 8, margin: '12px 0' }}>
+      <form className={styles.form} onSubmit={onSubmit}>
         <input
           type="number"
           placeholder="금액"
@@ -101,14 +98,14 @@ export default function GoalDetail() {
         />
         <button disabled={busy}>저축 기록</button>
       </form>
-      {err && <div style={{ color: 'crimson' }}>{err}</div>}
+      {err && <div className={styles.error}>{err}</div>}
 
       <h2>저축 로그</h2>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
+      <ul className={styles.list}>
         {logs?.content.map((l) => (
-          <li key={l.id} style={{ padding: '8px 0', borderBottom: '1px solid #eee' }}>
+          <li key={l.id} className={styles.item}>
             <div>{l.amount.toLocaleString()}원 — {l.memo ?? ''}</div>
-            <small>{new Date(l.createdAt).toLocaleString()}</small>
+            <small className={styles.time}>{new Date(l.createdAt).toLocaleString()}</small>
           </li>
         ))}
       </ul>

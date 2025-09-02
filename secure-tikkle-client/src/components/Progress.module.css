@@ -1,0 +1,12 @@
+.root {
+  background: #eee;
+  border-radius: 8px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  background: linear-gradient(90deg, #ffe6fe, #3B82F6);
+  transition: width .3s ease;
+}

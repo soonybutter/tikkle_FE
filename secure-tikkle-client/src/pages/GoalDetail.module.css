@@ -1,0 +1,41 @@
+.main {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.amount {
+  margin: 8px 0;
+}
+
+.progressText {
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.form {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.error {
+  color: crimson;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.time {
+  display: block;
+  color: #666;
+  font-size: 12px;
+}

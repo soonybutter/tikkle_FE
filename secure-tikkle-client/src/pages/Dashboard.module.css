@@ -1,0 +1,50 @@
+.main {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.createLink {
+  margin: 12px 0;
+}
+
+.form {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.error {
+  color: crimson;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+}
+
+.meta {
+  color: #666;
+}
+
+.progressText {
+  color: #666;
+  margin-top: 6px;
+}
