@@ -21,7 +21,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     const data: unknown = await res.json().catch(() => undefined);
     throw new ApiError(res.status, data);
   }
-  
+
   // 204 같은 경우 빈 바디일 수 있음
   if (res.status === 204) return undefined as T;
   return (await res.json()) as T;
@@ -99,7 +99,7 @@ export type MeResponse = {
 /** ---- 리소스 API ---- */
 export const Auth = {
   me: () => get<MeResponse>('/api/me'),
-  // 필요시: providers 링크 등 추가
+  logout: ()=> post<{ ok: boolean }>('/api/logout') // 로그아웃 시 사용
 };
 
 export const Goals = {
