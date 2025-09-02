@@ -124,7 +124,6 @@ export default function Dashboard() {
               </span>
             </div>
             <div className={styles.meta}>진행률 {g.progress}%</div>
-            <div className={styles.progressText}>진행률 {g.progress}%</div>
             <Progress value={g.progress} />
           </li>
         ))}
