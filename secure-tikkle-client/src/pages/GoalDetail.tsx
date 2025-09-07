@@ -36,6 +36,12 @@ export default function GoalDetail() {
   const [editAmount, setEditAmount] = useState<number | ''>('');
   const [editMemo, setEditMemo] = useState('');
 
+  // 목표 수정 상태
+  const [showEdit, setShowEdit] = useState(false);
+  const [editTitle, setEditTitle] = useState('');
+  const [editTarget, setEditTarget] = useState<number | ''>('');
+
+  // ✅ load를 useEffect보다 위에 선언
   const load = useCallback(async () => {
     setErr(null);
     const me = await Auth.me();
@@ -49,6 +55,7 @@ export default function GoalDetail() {
     setLogs(page);
   }, [goalId]);
 
+  // ✅ load를 한 번만 호출하는 useEffect (중복 useEffect 제거!)
   useEffect(() => { void load(); }, [load]);
 
   const onSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
@@ -62,7 +69,7 @@ export default function GoalDetail() {
       setAmount('');
       setMemo('');
       await load();
-      await triggerScan(); // 새 배지 체크
+      await triggerScan();
     } catch (e: unknown) {
       if (e instanceof ApiError) {
         const data = (e as { status: number; data?: unknown }).data;
@@ -79,14 +86,41 @@ export default function GoalDetail() {
     }
   };
 
+  const openEdit = () => {
+    if (!detail) return;
+    setEditTitle(detail.title);
+    setEditTarget(detail.targetAmount);
+    setShowEdit(true);
+  };
+  const closeEdit = () => setShowEdit(false);
+
+  const saveGoal = async () => {
+    if (!detail) return;
+    if (editTitle.trim() === '' || editTarget === '' || Number(editTarget) <= 0) {
+      alert('이름과 목표금액을 확인해 주세요.');
+      return;
+    }
+    try {
+      setBusy(true);
+      await Goals.update(goalId, { title: editTitle.trim(), targetAmount: Number(editTarget) });
+      await load();
+      setShowEdit(false);
+    } catch {
+      alert('목표 수정에 실패했어요.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const onDeleteGoal = async () => {
     if (!detail) return;
     if (!confirm(`정말로 "${detail.title}" 목표를 삭제할까요? 기록도 함께 사라집니다.`)) return;
     try {
       setBusy(true);
       await Goals.remove(goalId);
-      nav('/goals', { replace: true });
-    } catch {                          // ← (e) 제거
+      alert('삭제되었습니다.'); // ✅ 요청하신 alert 추가
+      nav('/records', { replace: true }); // ✅ /records로 이동
+    } catch {
       alert('삭제에 실패했어요.');
     } finally {
       setBusy(false);
@@ -110,10 +144,10 @@ export default function GoalDetail() {
     if (editAmount === '' || Number.isNaN(Number(editAmount))) return;
     try {
       setBusy(true);
-      await Savings.update({ id: editingId, amount: Number(editAmount), memo: editMemo });
+      await Savings.update({ goalId, id: editingId, amount: Number(editAmount), memo: editMemo });
       cancelEdit();
       await load();
-    } catch {                         
+    } catch {
       alert('수정에 실패했어요.');
     } finally {
       setBusy(false);
@@ -124,10 +158,10 @@ export default function GoalDetail() {
     if (!confirm('이 저축 기록을 삭제할까요?')) return;
     try {
       setBusy(true);
-      await Savings.remove(id);
+      await Savings.remove(goalId, id);
       if (editingId === id) cancelEdit();
       await load();
-    } catch {                          
+    } catch {
       alert('삭제에 실패했어요.');
     } finally {
       setBusy(false);
@@ -139,11 +173,40 @@ export default function GoalDetail() {
   return (
     <main className={styles.main}>
       <div className={styles.headerRow}>
-        <Link to="/goals" className={styles.linkBack}>&larr; 목록</Link>
-        <button className={styles.btnDanger} onClick={onDeleteGoal} disabled={busy}>
-          목표 삭제
-        </button>
+        <Link to="/records" className={styles.linkBack}>목록으로</Link>
+        <button className={styles.btnGhost} onClick={openEdit} disabled={busy}>목표 수정</button>
+        <button className={styles.btnDanger} onClick={onDeleteGoal} disabled={busy}>목표 삭제</button>
       </div>
+
+      {showEdit && (
+        <div className={styles.editCard}>
+          <div className={styles.editRow2}>
+            <label className={styles.editLabel}>
+              <span>목표 이름</span>
+              <input
+                className={styles.input}
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                maxLength={40}
+              />
+            </label>
+            <label className={styles.editLabel}>
+              <span>목표 금액</span>
+              <input
+                className={styles.input}
+                type="number"
+                min={1}
+                value={editTarget}
+                onChange={(e) => setEditTarget(e.target.value === '' ? '' : Number(e.target.value))}
+              />
+            </label>
+          </div>
+          <div className={styles.editActions}>
+            <button className={styles.btnPrimary} onClick={saveGoal} disabled={busy}>저장</button>
+            <button className={styles.btnGhost} onClick={closeEdit} disabled={busy}>취소</button>
+          </div>
+        </div>
+      )}
 
       <h1 className={styles.title}>{detail.title}</h1>
 

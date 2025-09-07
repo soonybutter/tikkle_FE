@@ -39,3 +39,43 @@
   color: #666;
   font-size: 12px;
 }
+
+/* 수정 */
+.headerRow {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin-bottom:8px;
+}
+.headerActions { display:flex; gap:8px; }
+
+.editCard {
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:12px;
+  margin:8px 0 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.06);
+}
+.editRow2 {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+.editLabel { display:grid; gap:6px; font-size:.95rem; }
+.input {
+  height:40px; border-radius:12px; border:1px solid #e5e7eb;
+  background:#f9fafb; padding:8px 12px; font-size:.95rem;
+}
+.editActions { display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
+
+.btnGhost {
+  border:1px solid #e5e7eb; background:#fff; border-radius:10px;
+  padding:8px 12px; cursor:pointer;
+}
+.btnDanger {
+  border:1px solid #fecaca; background:#fee2e2; color:#b91c1c;
+  border-radius:10px; padding:8px 12px; cursor:pointer;
+}
+.btnPrimary {
+  border:0; background:linear-gradient(135deg,#ffe8f2,#fed1e2);
+  color:#222; font-weight:700; border-radius:10px; padding:8px 14px; cursor:pointer;
+}
