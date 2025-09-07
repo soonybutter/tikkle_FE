@@ -16,13 +16,23 @@ export default function Login() {
 
   return (
     <main className={styles.main}>
-      <h1>로그인</h1>
-      <p>소셜 계정으로 로그인하세요.</p>
-      <div className={styles.grid}>
-        <a className={styles.btn} href={`${API}/oauth2/authorization/kakao`}>카카오로 로그인</a>
-        <a className={styles.btn} href={`${API}/oauth2/authorization/naver`}>네이버로 로그인</a>
-        <a className={styles.btn} href={`${API}/oauth2/authorization/google`}>구글로 로그인</a>
-      </div>
+      <section className={styles.card}>
+        <h1 className={styles.title}>로그인</h1>
+        <p className={styles.subtitle}>소셜 계정으로 로그인하세요.</p>
+
+        <div className={styles.grid}>
+          <a className={`${styles.btn} ${styles.btnKakao}`} href={`${API}/oauth2/authorization/kakao`}>
+            카카오로 로그인
+          </a>
+          <a className={`${styles.btn} ${styles.btnNaver}`} href={`${API}/oauth2/authorization/naver`}>
+            네이버로 로그인
+          </a>
+          <a className={`${styles.btn} ${styles.btnGoogle}`} href={`${API}/oauth2/authorization/google`}>
+            구글로 로그인
+          </a>
+        </div>
+        
+      </section>
     </main>
   );
 }

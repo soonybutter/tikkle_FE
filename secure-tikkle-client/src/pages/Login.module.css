@@ -1,26 +1,95 @@
 .main {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 24px 12px;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, #fff8f9 0%, transparent 60%),
+    radial-gradient(900px 400px at 110% 0%, #fffef4 0%, transparent 55%),
+    #ffffff;
+}
+
+.card {
+  width: 100%;
   max-width: 640px;
-  margin: 3rem auto;
-  padding: 0 1rem;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  padding: 20px 16px;
+}
+
+.title {
+  margin: 6px 0 4px;
+  font-size: clamp(1.4rem, 1.2vw + 1rem, 1.8rem);
+  font-weight: 800;
+}
+
+.subtitle {
+  color: #6b7280;
+  margin: 0 0 12px;
+  font-size: .95rem;
 }
 
 .grid {
   display: grid;
-  gap: 12px;
-  margin-top: 16px;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 .btn {
   width: 100%;
-  padding: 12px;
-  text-align: center;
-  background: #f3f4f6;
+  height: 44px;
+  border-radius: 12px;
   border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 800;
   text-decoration: none;
+  cursor: pointer;
+  transition: transform .08s ease, filter .2s ease, box-shadow .2s ease, background-color .2s ease, border-color .2s ease;
+  box-shadow: 0 10px 20px rgba(0,0,0,.06);
 }
 
-.btn:hover {
-  background: #e5e7eb;
+.btnKakao {
+  background: #FEE500;
+  color: #111827;
+  border-color: #e5e7eb;
+  box-shadow: 0 12px 24px rgba(253,224,71,.24);
+}
+.btnKakao:hover { transform: translateY(-1px); filter: brightness(1.03); }
+
+.btnNaver {
+  background: #03C75A;
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 12px 24px rgba(3,199,90,.22);
+}
+.btnNaver:hover { transform: translateY(-1px); filter: brightness(1.04); }
+
+.btnGoogle {
+  background: #ffffff;
+  color: #111827;
+  border-color: #e5e7eb;
+}
+.btnGoogle:hover { background: #f9fafb; transform: translateY(-1px); }
+
+.btn:focus-visible {
+  outline: 2px solid #F5276C;
+  outline-offset: 2px;
+}
+
+.legal {
+  margin-top: 12px;
+  color: #6b7280;
+  font-size: .85rem;
+  text-align: center;
+}
+
+/* 반응형 여백 조정 */
+@media (max-width: 680px) {
+  .card { padding: 16px 12px; }
+  .btn { height: 42px; }
 }
