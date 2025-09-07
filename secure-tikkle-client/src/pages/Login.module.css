@@ -1,7 +1,7 @@
 .main {
   min-height: 100svh;
   display: grid;
-  place-items: center;
+  place-items: center;    
   padding: 24px 12px;
   background:
     radial-gradient(1200px 500px at 10% -10%, #fff8f9 0%, transparent 60%),
@@ -11,7 +11,8 @@
 
 .card {
   width: 100%;
-  max-width: 640px;
+  max-width: 400px;
+  margin: 0 auto;           
   background: #fff;
   border: 1px solid rgba(0,0,0,.06);
   border-radius: 14px;
@@ -35,10 +36,11 @@
   display: grid;
   gap: 10px;
   margin-top: 12px;
+  justify-items: center;     
 }
 
 .btn {
-  width: 100%;
+  width: clamp(220px, 88%, 320px); 
   height: 44px;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
@@ -89,7 +91,6 @@
 }
 
 /* 반응형 여백 조정 */
-@media (max-width: 680px) {
-  .card { padding: 16px 12px; }
-  .btn { height: 42px; }
+@media (max-width: 420px) {
+  .btn { width: 100%; }
 }

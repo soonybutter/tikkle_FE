@@ -2,15 +2,15 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Auth } from '../api';
 import styles from './Login.module.css';
+import AuthButtons from '../components/AuthButtons';
 
 export default function Login() {
   const nav = useNavigate();
-  const API = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
-  useEffect(() => {
+    useEffect(() => {
     (async () => {
       const me = await Auth.me();
-      if (me.authenticated) nav('/');
+      if (me?.authenticated) nav('/', { replace: true }); // ✅ '/app' → '/'
     })();
   }, [nav]);
 
@@ -19,19 +19,7 @@ export default function Login() {
       <section className={styles.card}>
         <h1 className={styles.title}>로그인</h1>
         <p className={styles.subtitle}>소셜 계정으로 로그인하세요.</p>
-
-        <div className={styles.grid}>
-          <a className={`${styles.btn} ${styles.btnKakao}`} href={`${API}/oauth2/authorization/kakao`}>
-            카카오로 로그인
-          </a>
-          <a className={`${styles.btn} ${styles.btnNaver}`} href={`${API}/oauth2/authorization/naver`}>
-            네이버로 로그인
-          </a>
-          <a className={`${styles.btn} ${styles.btnGoogle}`} href={`${API}/oauth2/authorization/google`}>
-            구글로 로그인
-          </a>
-        </div>
-        
+        <AuthButtons />
       </section>
     </main>
   );

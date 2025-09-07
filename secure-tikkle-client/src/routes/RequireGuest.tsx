@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Auth } from '../api';
 
-export default function RequireAuth() {
+export default function RequireGuest() {
   const [checking, setChecking] = useState(true);
   const [authed, setAuthed] = useState(false);
   const location = useLocation();
@@ -12,7 +12,7 @@ export default function RequireAuth() {
     (async () => {
       try {
         const me = await Auth.me();
-        if (mounted) setAuthed(!!me?.authenticated);
+        if (mounted) { setAuthed(!!me?.authenticated); }
       } finally {
         if (mounted) setChecking(false);
       }
@@ -20,7 +20,7 @@ export default function RequireAuth() {
     return () => { mounted = false; };
   }, [location.key]);
 
-  if (checking) return null;
-  if (!authed) return <Navigate to="/login" replace state={{ from: location }} />;
-  return <Outlet />;
+    if (checking) return null;
+    if (authed) return <Navigate to="/" replace />;
+    return <Outlet />;
 }

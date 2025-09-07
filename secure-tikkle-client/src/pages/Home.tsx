@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Auth, Goals, Badges } from '../api';
 import type { GoalSummaryDto, BadgeDto } from '../api';
 import styles from './Home.module.css';
-
 
 type NewsItem = {
   title: string;
@@ -12,14 +12,11 @@ type NewsItem = {
   image?: string | null;
 };
 
-
-const NEWS_URL = import.meta.env.VITE_NEWS_URL ?? '/api/news'; 
-// 백엔드에서 프록시(/api/news)를 제공하거나 외부뉴스 엔드포인트를 여기 지정
+const NEWS_URL = import.meta.env.VITE_NEWS_URL ?? '/api/news';
 
 type StrMap = Record<string, unknown>;
 const isObj = (v: unknown): v is StrMap => typeof v === 'object' && v !== null;
-const toStr = (v: unknown): string | undefined =>
-  typeof v === 'string' ? v : undefined;
+const toStr = (v: unknown): string | undefined => (typeof v === 'string' ? v : undefined);
 const notNull = <T,>(v: T | null | undefined): v is T => v != null;
 
 type NewsApiArticle = {
@@ -49,8 +46,7 @@ function mapNewsApiArticle(a: unknown): NewsItem | null {
   const url = toStr(aa.url);
   if (!title || !url) return null;
 
-  const source =
-    isObj(aa.source) ? toStr((aa.source as StrMap).name) : undefined;
+  const source = isObj(aa.source) ? toStr((aa.source as StrMap).name) : undefined;
   const publishedAt = toStr(aa.publishedAt);
   const image = toStr((aa as { urlToImage?: unknown }).urlToImage) ?? null;
 
@@ -78,21 +74,12 @@ function mapRssLikeItem(a: unknown): NewsItem | null {
 }
 
 function parseNewsResponse(json: unknown): NewsItem[] {
-  // case 1) { articles: [...] } (NewsAPI)
   if (isObj(json) && Array.isArray((json as StrMap).articles)) {
-    return ((json as StrMap).articles as unknown[])
-      .map(mapNewsApiArticle)
-      .filter(notNull)
-      .slice(0, 12);
+    return ((json as StrMap).articles as unknown[]).map(mapNewsApiArticle).filter(notNull).slice(0, 12);
   }
-  // case 2) { items: [...] } (RSS 변환 등)
   if (isObj(json) && Array.isArray((json as StrMap).items)) {
-    return ((json as StrMap).items as unknown[])
-      .map(mapRssLikeItem)
-      .filter(notNull)
-      .slice(0, 12);
+    return ((json as StrMap).items as unknown[]).map(mapRssLikeItem).filter(notNull).slice(0, 12);
   }
-  // case 3) 배열인데 구조 모를 때: RSS-like로 시도
   if (Array.isArray(json)) {
     return (json as unknown[]).map(mapRssLikeItem).filter(notNull).slice(0, 12);
   }
@@ -100,56 +87,76 @@ function parseNewsResponse(json: unknown): NewsItem[] {
 }
 
 export default function Home() {
-  const nav = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const [authed, setAuthed] = useState<boolean | null>(null); // ← 로그인 여부(리다이렉트 금지)
+  const [loading, setLoading] = useState(true);               // ← 데이터 로딩(뉴스/개인화)
   const [goals, setGoals] = useState<GoalSummaryDto[]>([]);
   const [badges, setBadges] = useState<BadgeDto[]>([]);
-  const earnedBadges = useMemo(
-    () => badges.filter((b) => b.earned === true),
-    [badges]
-  );
   const [news, setNews] = useState<NewsItem[]>([]);
 
+  const earnedBadges = useMemo(() => badges.filter((b) => b.earned === true), [badges]);
 
   const badgeRailRef = useRef<HTMLDivElement>(null);
   const scrollBadges = (dir: 'left' | 'right') => {
-    
-      const rail = badgeRailRef.current;
-      if (!rail) return;
-      const first = rail.querySelector(`.${styles.badgeItem}`) as HTMLElement | null;
-      const gap =
+    const rail = badgeRailRef.current;
+    if (!rail) return;
+    const first = rail.querySelector(`.${styles.badgeItem}`) as HTMLElement | null;
+    const gap =
       parseFloat(getComputedStyle(rail).columnGap || getComputedStyle(rail).gap || '16') || 16;
-      const step = (first?.offsetWidth ?? rail.clientWidth / 4) + gap;
-      rail.scrollBy({ left: dir === 'left' ? -step * 2 : step * 2, behavior: 'smooth' });
+    const step = (first?.offsetWidth ?? rail.clientWidth / 4) + gap;
+    rail.scrollBy({ left: dir === 'left' ? -step * 2 : step * 2, behavior: 'smooth' });
   };
 
+  // 1) 로그인 여부만 판단 (리다이렉트 절대 금지)
   useEffect(() => {
+    let mounted = true;
     (async () => {
-      setLoading(true);
-      const me = await Auth.me();
-      if (!me.authenticated) { nav('/login'); return; }
-
-      const [g, b] = await Promise.all([Goals.list(), Badges.list()]);
-      setGoals(g);
-      setBadges(b);
-
       try {
-        const r = await fetch(NEWS_URL, { credentials: 'omit' });
-        const j: unknown = await r.json();     
-        const items = parseNewsResponse(j);    
-        setNews(items);
-    } catch {
-    setNews([]);
-    }
-      setLoading(false);
+        const me = await Auth.me();
+        if (mounted) setAuthed(!!me?.authenticated);
+      } catch {
+        if (mounted) setAuthed(false);
+      }
     })();
-  }, [nav]);
+    return () => { mounted = false; };
+  }, []);
+
+  // 2) 데이터 로딩 (뉴스는 항상, 목표/배지는 authed일 때만)
+  useEffect(() => {
+    let mounted = true;
+    if (authed === null) return; // 로그인 여부 모를 땐 대기
+
+    (async () => {
+      try {
+        if (authed) {
+          const [g, b] = await Promise.all([Goals.list(), Badges.list()]);
+          if (!mounted) return;
+          setGoals(g);
+          setBadges(b);
+        } else {
+          setGoals([]); setBadges([]);
+        }
+
+        try {
+          const r = await fetch(NEWS_URL, { credentials: 'omit' });
+          const j: unknown = await r.json();
+          if (!mounted) return;
+          setNews(parseNewsResponse(j));
+        } catch {
+          if (mounted) setNews([]);
+        }
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+
+    return () => { mounted = false; };
+  }, [authed]);
 
   const today = useMemo(() => new Date().toLocaleDateString('ko-KR', { dateStyle: 'long' }), []);
   const sums = useMemo(() => {
     const totalTarget = goals.reduce((s, g) => s + g.targetAmount, 0);
     const totalCurrent = goals.reduce((s, g) => s + g.currentAmount, 0);
-    const done = goals.filter(g => g.currentAmount >= g.targetAmount).length;
+    const done = goals.filter((g) => g.currentAmount >= g.targetAmount).length;
     return { totalTarget, totalCurrent, done, count: goals.length };
   }, [goals]);
 
@@ -170,14 +177,12 @@ export default function Home() {
     '장바구니 24시간 룰(내일도 원하면 결제) ⏳',
     '앱 푸시(쇼핑/딜) 알림 OFF 🔕',
     '무료체험 시작 해지 알람 등록 ⏰',
-    '새 옷 사기 전 옷장 겹치는지 확인 👚'
-
+    '새 옷 사기 전 옷장 겹치는지 확인 👚',
   ];
+  const tip = tips[Math.floor(Math.random() * tips.length)];
 
-
-  const tip = tips[Math.floor(Math.random()*tips.length)];
-
-  if (loading) return <main className="container page">로딩 중…</main>;
+  // authed === null인 짧은 동안만 스켈레톤/대기, 비로그인으로 확정되면 바로 인트로 렌더
+  if (authed === null) return <main className="container page">로딩 중…</main>;
 
   return (
     <main className={`container ${styles.page}`}>
@@ -185,33 +190,50 @@ export default function Home() {
       <section className={styles.hero}>
         <div className={styles.heroLeft}>
           <div className={styles.date}>{today}</div>
-          <h1 className={styles.title}>오늘의 티끌을 모아볼까요? 🐣</h1>
-          <div className={styles.stats}>
-            <div className={styles.statCard}>
-              <div className={styles.statLabel}>총 모은 금액</div>
-              <div className={styles.statValue}>{sums.totalCurrent.toLocaleString()}원</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statLabel}>전체 목표</div>
-              <div className={styles.statValue}>{sums.count}개</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statLabel}>완료한 목표</div>
-              <div className={styles.statValue}>{sums.done}개</div>
-            </div>
-          </div>
-          <p className={styles.tip}>💡오늘의 절약 팁 💡  {tip} </p>
-          <div className={styles.ctaRow}>
-            <Link to="/goals/new" className={styles.cta}>+ 새 목표 만들기</Link>
-          </div>
+
+          {/* 비로그인 인트로 카피 */}
+          {!authed ? (
+            <>
+              <h1 className={styles.title}>작은 절약이 쌓여 큰 목표가 됩니다.</h1>
+              <p className={styles.tip}>💡 오늘의 절약 팁: {tip}</p>
+              <div className={styles.ctaRow}>
+                <Link to="/login" className={styles.cta}>소셜 로그인으로 시작하기</Link>
+              </div>
+            </>
+          ) : (
+            // 로그인된 경우 개인화 요약
+            <>
+              <h1 className={styles.title}>오늘의 티끌을 모아볼까요? 🐣</h1>
+              <div className={styles.stats}>
+                <div className={styles.statCard}>
+                  <div className={styles.statLabel}>총 모은 금액</div>
+                  <div className={styles.statValue}>{sums.totalCurrent.toLocaleString()}원</div>
+                </div>
+                <div className={styles.statCard}>
+                  <div className={styles.statLabel}>전체 목표</div>
+                  <div className={styles.statValue}>{sums.count}개</div>
+                </div>
+                <div className={styles.statCard}>
+                  <div className={styles.statLabel}>완료한 목표</div>
+                  <div className={styles.statValue}>{sums.done}개</div>
+                </div>
+              </div>
+              <p className={styles.tip}>💡 오늘의 절약 팁: {tip}</p>
+              <div className={styles.ctaRow}>
+                <Link to="/goals/new" className={styles.cta}>+ 새 목표 만들기</Link>
+              </div>
+            </>
+          )}
         </div>
         <div className={styles.heroMascot} aria-hidden>💸</div>
       </section>
 
-      {/* News */}
+      {/* News (항상 노출 가능) */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>오늘의 경제 뉴스</h2>
-        {news.length === 0 ? (
+        {loading && news.length === 0 ? (
+          <div className={styles.empty}>불러오는 중…</div>
+        ) : news.length === 0 ? (
           <div className={styles.empty}>가져올 뉴스가 없어요. 잠시 후 다시 시도해 주세요.</div>
         ) : (
           <div className={styles.newsRail}>
@@ -230,118 +252,82 @@ export default function Home() {
         )}
       </section>
 
-      {/* Goals mini */}
-    <section className={styles.section}>
-    <h2 className={styles.sectionTitle}>내 목표 한눈에 보기</h2>
-    <div className={styles.goalGrid}>
-        {goals.map(g => {
-        const p = Math.min(100, Math.round((g.currentAmount / g.targetAmount) * 100));
-        return (
-            <Link key={g.id} to={`/goals/${g.id}`} className={styles.goalCard}>
-            <div className={styles.goalTop}>
-                <span className={styles.goalEmoji}>📌</span>
-                <div className={styles.goalTitle}>{g.title}</div>
+      {/* Goals & Badges: 로그인된 경우에만 노출 */}
+      {authed && (
+        <>
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>내 목표 한눈에 보기</h2>
+            <div className={styles.goalGrid}>
+              {goals.map((g) => {
+                const p = Math.min(100, Math.round((g.currentAmount / g.targetAmount) * 100));
+                return (
+                  <Link key={g.id} to={`/goals/${g.id}`} className={styles.goalCard}>
+                    <div className={styles.goalTop}>
+                      <span className={styles.goalEmoji}>📌</span>
+                      <div className={styles.goalTitle}>{g.title}</div>
+                    </div>
+                    <div className={styles.goalAmounts}>
+                      <b>{g.currentAmount.toLocaleString()}원</b>
+                      <span> / {g.targetAmount.toLocaleString()}원</span>
+                    </div>
+                    <div className={styles.progressTrack} aria-label="진행률">
+                      <div className={styles.progressFill} style={{ width: `${p}%` }} aria-hidden />
+                    </div>
+                    <div className={styles.goalProgressText}>진행률 {p}%</div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className={styles.section}>
+            <div className={styles.badgeHead}>
+              <h2 className={styles.sectionTitle}>나의 배지</h2>
+              <Link to="/badges" className={styles.linkBtn}>배지 전체 보기 →</Link>
             </div>
 
-            <div className={styles.goalAmounts}>
-                <b>{g.currentAmount.toLocaleString()}원</b>
-                <span> / {g.targetAmount.toLocaleString()}원</span>
-            </div>
-
-            {/* 진행률 바 (로컬) */}
-            <div className={styles.progressTrack} aria-label="진행률">
-                <div className={styles.progressFill} style={{ width: `${p}%` }} aria-hidden />
-            </div>
-
-            <div className={styles.goalProgressText}>진행률 {p}%</div>
-            </Link>
-        );
-        })}
-    </div>
-    </section>
-
-    {/* Badges strip */}
-    <section className={styles.section}>
-    <div className={styles.badgeHead}>
-        <h2 className={styles.sectionTitle}>나의 배지</h2>
-        <Link to="/badges" className={styles.linkBtn}>배지 전체 보기 →</Link>
-    </div>
-
-    {earnedBadges.length === 0 ? (
-        <div className={styles.empty}>
-        아직 획득한 배지가 없어요. 첫 배지를 노려보세요! 🎯
-        </div>
-    ) : (
-        <div
-        className={styles.badgeCarousel}
-        tabIndex={0}
-        onKeyDown={(e) => {
-            if (e.key === 'ArrowLeft') scrollBadges('left');
-            if (e.key === 'ArrowRight') scrollBadges('right');
-        }}
-        >
-        <button
-            type="button"
-            className={`${styles.arrow} ${styles.left}`}
-            aria-label="왼쪽으로"
-            onClick={() => scrollBadges('left')}
-        >‹</button>
-
-        <div ref={badgeRailRef} className={styles.badgeRail}>
-            {earnedBadges.map((b) => (
-            <div
-                key={b.code}
-                className={styles.badgeItem}
-                title={b.title}
+            {earnedBadges.length === 0 ? (
+              <div className={styles.empty}>아직 획득한 배지가 없어요. 첫 배지를 노려보세요! 🎯</div>
+            ) : (
+              <div
+                className={styles.badgeCarousel}
                 tabIndex={0}
-                aria-label={`${b.title} 획득`}
-            >
-                <div className={styles.badgeFlip}>
-                <div className={styles.badge3d}>
-                    {/* 앞면: 획득 배지이므로 흑백 처리 불필요 */}
-                    <div className={`${styles.badgeFace} ${styles.front}`}>
-                    <div className={styles.badgeCircle}>
-                        <img
-                        src="/badge/cuteStar.png"
-                        alt=""
-                        className={styles.badgeStar}
-                        loading="lazy"
-                        />
-                    </div>
-                    </div>
-
-                    {/* 뒷면: 이모지 + 상세 */}
-                    <div className={`${styles.badgeFace} ${styles.back}`}>
-                    <div className={styles.badgeCircle}>
-                        <div className={styles.badgeBackEmoji} aria-hidden>
-                        <div>🏅</div>
-                        </div>
-                        <div className={styles.badgeBackText}>
-                        {b.earnedAt && (
-                            <div className={styles.badgeBackMeta}>
-                            획득일 {new Date(b.earnedAt).toLocaleDateString('ko-KR')}
+                onKeyDown={(e) => {
+                  if (e.key === 'ArrowLeft') scrollBadges('left');
+                  if (e.key === 'ArrowRight') scrollBadges('right');
+                }}
+              >
+                <button type="button" className={`${styles.arrow} ${styles.left}`} aria-label="왼쪽으로" onClick={() => scrollBadges('left')}>‹</button>
+                <div ref={badgeRailRef} className={styles.badgeRail}>
+                  {earnedBadges.map((b) => (
+                    <div key={b.code} className={styles.badgeItem} title={b.title} tabIndex={0} aria-label={`${b.title} 획득`}>
+                      <div className={styles.badgeFlip}>
+                        <div className={styles.badge3d}>
+                          <div className={`${styles.badgeFace} ${styles.front}`}>
+                            <div className={styles.badgeCircle}>
+                              <img src="/badge/cuteStar.png" alt="" className={styles.badgeStar} loading="lazy" />
                             </div>
-                        )}
+                          </div>
+                          <div className={`${styles.badgeFace} ${styles.back}`}>
+                            <div className={styles.badgeCircle}>
+                              <div className={styles.badgeBackEmoji} aria-hidden><div>🏅</div></div>
+                              <div className={styles.badgeBackText}>
+                                {b.earnedAt && <div className={styles.badgeBackMeta}>획득일 {new Date(b.earnedAt).toLocaleDateString('ko-KR')}</div>}
+                              </div>
+                            </div>
+                          </div>
                         </div>
+                      </div>
+                      <div className={styles.badgeLabel}>{b.title}</div>
                     </div>
-                    </div>
+                  ))}
                 </div>
-                </div>
-
-                <div className={styles.badgeLabel}>{b.title}</div>
-            </div>
-            ))}
-        </div>
-
-        <button
-            type="button"
-            className={`${styles.arrow} ${styles.right}`}
-            aria-label="오른쪽으로"
-            onClick={() => scrollBadges('right')}
-        >›</button>
-        </div>
-    )}
-    </section>
+                <button type="button" className={`${styles.arrow} ${styles.right}`} aria-label="오른쪽으로" onClick={() => scrollBadges('right')}>›</button>
+              </div>
+            )}
+          </section>
+        </>
+      )}
     </main>
   );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Auth, Goals } from '../api';
+import { Goals } from '../api';
 import type { GoalSummaryDto } from '../api';
 import styles from './Records.module.css';
 
@@ -12,8 +12,6 @@ export default function RecordsPage() {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const me = await Auth.me();
-      if (!me.authenticated) { nav('/login'); return; }
       const list = await Goals.list();
       setGoals(list);
       setLoading(false);

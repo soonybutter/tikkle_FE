@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Goals, Auth, ApiError } from '../api';
+import { Goals, ApiError } from '../api';
 import type { GoalSummaryDto } from '../api';
 import Progress from '../components/Progress';
 import styles from './Dashboard.module.css';
@@ -82,11 +82,7 @@ export default function Dashboard() {
   const load = useCallback(async () => {
     try {
       setLoading(true);
-      const me = await Auth.me();
-      if (!me.authenticated) {
-        nav('/login');
-        return;
-      }
+      
       const list = await Goals.list();
       setItems(list);
       setErr(null);
