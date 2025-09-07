@@ -4,17 +4,165 @@
   padding: 0 1rem;
 }
 
-.form {
-  display: grid;
-  gap: 12px;
-  max-width: 420px;
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .25rem;
 }
 
-.label {
+.linkBack {
+  text-decoration: none;
+  color: #333;
+}
+
+.title { margin: 6px 0 8px; }
+
+.amount { margin: 8px 0 6px; }
+
+.progressWrap {
   display: grid;
   gap: 6px;
+  margin-bottom: 10px;
 }
+
+.progressTrack {
+  width: 100%;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  background: #b8eaff;
+  border-radius: 999px;
+  transition: width .25s ease;
+}
+.progressText {
+  color: #666;
+  font-size: .9rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  margin: 12px 0;
+}
+.input {
+  height: 38px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  padding: 8px 10px;
+  font-size: .95rem;
+}
+.btnPrimary {
+  height: 38px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: #111827;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btnPrimary:disabled { opacity: .6; cursor: not-allowed; }
+
+.btnDanger {
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid #fee2e2;
+  border-radius: 10px;
+  background: #fff5f5;
+  color: #b91c1c;
+  cursor: pointer;
+}
+.btnDanger:hover { background: #ffe4e6; }
 
 .error {
   color: crimson;
+  margin-bottom: 6px;
 }
+
+.h2 { margin: 14px 0 8px; }
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.logMain { display: grid; gap: 4px; }
+.logSummary { color: #111; }
+.logMemo { color: #374151; }
+.time {
+  display: block;
+  color: #666;
+  font-size: 12px;
+}
+
+.logActions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.btnGhost, .btnGhostDanger {
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+  font-size: .9rem;
+}
+.btnGhost:hover { background: #f9fafb; }
+.btnGhostDanger { color: #b91c1c; border-color: #fecaca; }
+.btnGhostDanger:hover { background: #fff1f2; }
+
+.editRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+.inputSm {
+  height: 34px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  padding: 6px 10px;
+  font-size: .9rem;
+}
+.editActions {
+  display: flex;
+  gap: 6px;
+}
+.btnPrimarySm, .btnGhostSm {
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btnPrimarySm {
+  border: 0;
+  background: #111827;
+  color: #fff;
+  font-weight: 700;
+}
+.btnGhostSm {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+}
+.btnGhostSm:hover { background: #f9fafb; }

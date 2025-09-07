@@ -1,10 +1,9 @@
 import { useBadgeAnnouncer } from '../hooks/useBadgeAnnouncer';
 import { useCallback, useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Goals, Savings, Auth, ApiError } from '../api';
 import type { GoalDetailDto, SavingsLogDto, Page } from '../api';
 import styles from './GoalDetail.module.css';
-
 
 type FieldError = { msg: string; field?: string };
 type ErrorPayload = { ok?: boolean; errors: FieldError[] };
@@ -19,6 +18,7 @@ const isErrorPayload = (v: unknown): v is ErrorPayload => {
 };
 
 export default function GoalDetail() {
+  const nav = useNavigate();
   const { id } = useParams();
   const goalId = Number(id);
 
@@ -31,6 +31,10 @@ export default function GoalDetail() {
   const [err, setErr] = useState<string | null>(null);
   const { triggerScan } = useBadgeAnnouncer();
 
+  // 인라인 편집 상태
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editAmount, setEditAmount] = useState<number | ''>('');
+  const [editMemo, setEditMemo] = useState('');
 
   const load = useCallback(async () => {
     setErr(null);
@@ -58,13 +62,10 @@ export default function GoalDetail() {
       setAmount('');
       setMemo('');
       await load();
-
-      // 새 배지 획득 여부 확인 → 새로 생긴 배지 있으면 자동 팝업+콘페티
-      await triggerScan();
-
+      await triggerScan(); // 새 배지 체크
     } catch (e: unknown) {
       if (e instanceof ApiError) {
-        const data = (e as unknown as { status: number; data?: unknown }).data;
+        const data = (e as { status: number; data?: unknown }).data;
         if (isErrorPayload(data)) {
           setErr(data.errors.map((x) => x.msg).join(', '));
         } else {
@@ -78,20 +79,87 @@ export default function GoalDetail() {
     }
   };
 
+  const onDeleteGoal = async () => {
+    if (!detail) return;
+    if (!confirm(`정말로 "${detail.title}" 목표를 삭제할까요? 기록도 함께 사라집니다.`)) return;
+    try {
+      setBusy(true);
+      await Goals.remove(goalId);
+      nav('/goals', { replace: true });
+    } catch {                          // ← (e) 제거
+      alert('삭제에 실패했어요.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // 인라인 편집 진입
+  const startEdit = (l: SavingsLogDto) => {
+    setEditingId(l.id);
+    setEditAmount(l.amount);
+    setEditMemo(l.memo ?? '');
+  };
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditAmount('');
+    setEditMemo('');
+  };
+
+  const saveEdit = async () => {
+    if (editingId == null) return;
+    if (editAmount === '' || Number.isNaN(Number(editAmount))) return;
+    try {
+      setBusy(true);
+      await Savings.update({ id: editingId, amount: Number(editAmount), memo: editMemo });
+      cancelEdit();
+      await load();
+    } catch {                         
+      alert('수정에 실패했어요.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const deleteLog = async (id: number) => {
+    if (!confirm('이 저축 기록을 삭제할까요?')) return;
+    try {
+      setBusy(true);
+      await Savings.remove(id);
+      if (editingId === id) cancelEdit();
+      await load();
+    } catch {                          
+      alert('삭제에 실패했어요.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
   if (!detail) return <div>Loading…</div>;
 
   return (
     <main className={styles.main}>
-      <Link to="/">&larr; 목록</Link>
-      <h1>{detail.title}</h1>
+      <div className={styles.headerRow}>
+        <Link to="/goals" className={styles.linkBack}>&larr; 목록</Link>
+        <button className={styles.btnDanger} onClick={onDeleteGoal} disabled={busy}>
+          목표 삭제
+        </button>
+      </div>
+
+      <h1 className={styles.title}>{detail.title}</h1>
 
       <div className={styles.amount}>
         {detail.currentAmount.toLocaleString()} / {detail.targetAmount.toLocaleString()}원
       </div>
-      <div className={styles.progressText}>진행률 {detail.progress}%</div>
+      <div className={styles.progressWrap}>
+        <div className={styles.progressTrack}>
+          <div className={styles.progressFill} style={{ width: `${detail.progress}%` }} />
+        </div>
+        <div className={styles.progressText}>진행률 {detail.progress}%</div>
+      </div>
 
       <form className={styles.form} onSubmit={onSubmit}>
         <input
+          className={styles.input}
           type="number"
           placeholder="금액"
           min={1}
@@ -100,22 +168,69 @@ export default function GoalDetail() {
           required
         />
         <input
+          className={styles.input}
           placeholder="메모 (선택)"
           value={memo}
           onChange={(ev) => setMemo(ev.target.value)}
         />
-        <button disabled={busy}>저축 기록</button>
+        <button className={styles.btnPrimary} disabled={busy}>저축 기록</button>
       </form>
       {err && <div className={styles.error}>{err}</div>}
 
-      <h2>저축 로그</h2>
+      <h2 className={styles.h2}>저축 로그</h2>
       <ul className={styles.list}>
-        {logs?.content.map((l) => (
-          <li key={l.id} className={styles.item}>
-            <div>{l.amount.toLocaleString()}원 — {l.memo ?? ''}</div>
-            <small className={styles.time}>{new Date(l.createdAt).toLocaleString()}</small>
-          </li>
-        ))}
+        {logs?.content.map((l) => {
+          const isEditing = editingId === l.id;
+          return (
+            <li key={l.id} className={styles.item}>
+              {!isEditing ? (
+                <>
+                  <div className={styles.logMain}>
+                    <div className={styles.logSummary}>
+                      <b>{l.amount.toLocaleString()}원</b>
+                      {l.memo ? <span className={styles.logMemo}> — {l.memo}</span> : null}
+                    </div>
+                    <small className={styles.time}>
+                      {new Date(l.createdAt).toLocaleString()}
+                    </small>
+                  </div>
+                  <div className={styles.logActions}>
+                    <button className={styles.btnGhost} onClick={() => startEdit(l)} disabled={busy}>
+                      수정
+                    </button>
+                    <button className={styles.btnGhostDanger} onClick={() => deleteLog(l.id)} disabled={busy}>
+                      삭제
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className={styles.editRow}>
+                  <input
+                    className={styles.inputSm}
+                    type="number"
+                    min={1}
+                    value={editAmount}
+                    onChange={(e) => setEditAmount(e.target.value === '' ? '' : Number(e.target.value))}
+                  />
+                  <input
+                    className={styles.inputSm}
+                    value={editMemo}
+                    onChange={(e) => setEditMemo(e.target.value)}
+                    placeholder="메모(선택)"
+                  />
+                  <div className={styles.editActions}>
+                    <button className={styles.btnPrimarySm} onClick={saveEdit} type="button" disabled={busy}>
+                      저장
+                    </button>
+                    <button className={styles.btnGhostSm} onClick={cancelEdit} type="button" disabled={busy}>
+                      취소
+                    </button>
+                  </div>
+                </div>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </main>
   );

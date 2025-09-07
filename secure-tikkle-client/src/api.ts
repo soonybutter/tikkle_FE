@@ -109,13 +109,38 @@ export const Goals = {
     get<Page<SavingsLogDto>>(`/api/goals/${id}/logs?page=${page}&size=${size}`),
   create: (p: { title: string; targetAmount: number }) =>
     post<CreatedGoalEntity>('/api/goals', p),
+
+   async remove(id: number): Promise<void> {
+    const r = await fetch(`/api/goals/${id}`, { method: 'DELETE', credentials: 'include' });
+    if (!r.ok) throw new ApiError(r.status, await safeJson(r));
+  },
 };
 
 export const Savings = {
   create: (p: { goalId: number; amount: number; memo?: string }) =>
     post<SavingsLogDto>('/api/savings-logs', p),
+
+  async update(payload: { id: number; amount: number; memo?: string }): Promise<void> {
+    const r = await fetch(`/api/savings/${payload.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ amount: payload.amount, memo: payload.memo ?? null }),
+    });
+    if (!r.ok) throw new ApiError(r.status, await safeJson(r));
+  },
+
+  async remove(id: number): Promise<void> {
+    const r = await fetch(`/api/savings/${id}`, { method: 'DELETE', credentials: 'include' });
+    if (!r.ok) throw new ApiError(r.status, await safeJson(r));
+  },
+
   
 };
+
+async function safeJson(r: Response) {
+  try { return await r.json(); } catch { return null; }
+}
 
 export const Badges = {
   list: () => get<BadgeDto[]>('/api/badges'),
