@@ -10,6 +10,8 @@ import BadgeAnnouncerProvider from './providers/BadgeAnnouncerProvider';
 import Home from './pages/Home';
 import Friends from './pages/Friends';
 import GoalsListPage from './pages/GoalsListPage';
+import RecordsPage from './pages/RecordsPage';
+
 import './index.css';
 
 export default function App() {
@@ -28,7 +30,8 @@ export default function App() {
             <Route path="/goals/:id" element={<GoalDetail />} />
             <Route path="/badges" element={<BadgesPage />} />
             <Route path="/friends" element={<Friends />} />
-             <Route path="/goals" element={<GoalsListPage />} />
+            <Route path="/goals" element={<GoalsListPage />} />
+            <Route path="/records" element={<RecordsPage />} />
           </Route>
 
           {/* fallback */}

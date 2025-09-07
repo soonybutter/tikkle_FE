@@ -36,7 +36,7 @@ export default function Header() {
         {/*  오른쪽 링크/버튼 묶음 */}
         <div className={styles.navRight}>
           <Link to="/">홈</Link>
-          <Link to="/goals">나의 티끌 기록</Link>
+          <Link to="/records">나의 티끌기록</Link>
           <Link to="/goals/new">새 목표</Link>
           <Link to="/badges">배지현황</Link>
           <Link to="/friends">랭킹</Link>
