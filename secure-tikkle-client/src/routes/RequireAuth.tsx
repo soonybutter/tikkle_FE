@@ -19,7 +19,7 @@ export default function RequireAuth() {
     return () => { mounted = false; };
   }, []);
 
-  if (ok === null) return null; // 로딩 스피너 등을 원하면 여기서 표시
+  if (ok === null) return null; 
 
   return ok ? <Outlet /> : <Navigate to="/login" state={{ from: loc }} replace />;
 }

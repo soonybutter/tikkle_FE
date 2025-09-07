@@ -5,19 +5,13 @@
   margin-top: 6px;
 }
 
-.track {
-  flex: 1;
-  height: 10px;            
-  background: #eee;         
-  border-radius: 999px;
-  overflow: hidden;
+.track { 
+  height: 14px;  
 }
 
-.bar {
-  height: 100%;
-  background: #e5c3ce;      
-  border-radius: 999px;
-  transition: width .35s ease;
+.bar   { 
+  height: 100%; 
+  border-radius: 999px; 
 }
 
 .label {

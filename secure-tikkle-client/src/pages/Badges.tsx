@@ -6,6 +6,20 @@ import { partyBurst } from '../lib/confetti';
 import gridCss from './Badges.module.css';
 import modalCss from '../components/BadgeModal.module.css';
 
+/** 배지 코드 → 이모지 매핑 (원하는 대로 추가/수정) */
+const badgeEmojiByCode: Record<string, string> = {
+  FIRST_SAVE: '💎',
+  FIRST_GOAL: '🎯',
+  NO_SPEND_DAY: '🚫',
+  TEN_DEPOSITS: '🔟',
+  COFFEE_SKIP: '☕',
+  BUS_OR_SUBWAY: '🚇',
+  STREAK_7: '🔥',
+  GOAL_COMPLETE: '🏁',
+};
+const getBadgeEmoji = (code: string) => badgeEmojiByCode[code] ?? '🏅';
+
+
 export default function BadgesPage() {
   const [items, setItems] = useState<BadgeDto[]>([]);
   const [open, setOpen] = useState(false);
@@ -22,10 +36,9 @@ export default function BadgesPage() {
   const onOpen = (b: BadgeDto) => {
     setSelected(b);
     setOpen(true);
-    firedOnceRef.current = false; // 새로 열 때마다 초기화
+    firedOnceRef.current = false;
   };
 
-  // 열렸고, 획득 배지면 빵빠래
   useEffect(() => {
     if (open && selected?.earned && !firedOnceRef.current) {
       firedOnceRef.current = true;
@@ -35,7 +48,7 @@ export default function BadgesPage() {
 
   const onClose = () => {
     setOpen(false);
-    setTimeout(() => setSelected(null), 200); // exit 애니메이션 후 정리
+    setTimeout(() => setSelected(null), 200);
   };
 
   return (
@@ -47,13 +60,31 @@ export default function BadgesPage() {
           <li
             key={b.code}
             className={`${gridCss.tile} ${b.earned ? gridCss.earned : gridCss.locked}`}
-            onClick={() => onOpen(b)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => { if (e.key === 'Enter') onOpen(b); }}
+            aria-label={`${b.title} ${b.earned ? '획득' : '잠김'}`}
+            {...(b.earned
+              ? {
+                  onClick: () => onOpen(b),
+                  role: 'button' as const,
+                  tabIndex: 0 as const,
+                  onKeyDown: (e: React.KeyboardEvent) => {
+                    if (e.key === 'Enter' || e.key === ' ') onOpen(b);
+                  },
+                }
+              : {
+                  'aria-disabled': true as const,
+                  tabIndex: -1 as const,
+                })}
           >
             <div className={gridCss.iconWrap}>
-              <img src={b.icon} alt="" className={gridCss.icon} />
+              <img
+                src="/badge/cuteStar.png"
+                alt=""
+                className={`${gridCss.iconStar} ${b.earned ? '' : gridCss.iconGray}`}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/badge/cuteStar.png';
+                }}
+              />
             </div>
             <div className={gridCss.title}>{b.title}</div>
             <div className={gridCss.sub}>{b.earned ? '획득 완료' : '잠김'}</div>
@@ -72,7 +103,6 @@ export default function BadgesPage() {
   );
 }
 
-/** 공통 모달 래퍼 (백드롭 + 가운데 카드) */
 function Modal({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
   useEffect(() => {
     const onEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -102,16 +132,20 @@ function Modal({ children, onClose }: { children: React.ReactNode; onClose: () =
   );
 }
 
-/** 배지 상세 카드 */
+/** 상세 카드도 이모지로 교체 */
 function BadgeCard({ badge, onClose }: { badge: BadgeDto; onClose: () => void }) {
+  const isEarned = !!badge.earned;
+
   return (
     <div className={modalCss.inner}>
       <div className={modalCss.iconRing}>
-        <img src={badge.icon} alt="" className={modalCss.iconLarge} />
+        <span className={modalCss.emojiLarge} role="img" aria-label={badge.title}>
+        {getBadgeEmoji(badge.code)}
+      </span>
       </div>
       <h2 className={modalCss.title}>
         {badge.title}
-        {badge.earned && <span className={modalCss.pill}>획득!</span>}
+        {isEarned && <span className={modalCss.pill}>획득!</span>}
       </h2>
       <p className={modalCss.desc}>{badge.description}</p>
       {badge.earnedAt && (

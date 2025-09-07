@@ -35,6 +35,33 @@
   border-color: #e3e3e3;
 }
 
+/*  잠김 타일은 상호작용 차단 */
+.tile.locked {
+  cursor: default;          
+  pointer-events: none;     
+  transform: none !important;
+  box-shadow: 0 1px 0 rgba(0,0,0,.03) !important;
+  border-color: #eee !important;
+}
+
+/* ⭐ PNG 아이콘 공통 */
+.iconStar {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  display: inline-block;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.12));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* 🔒 잠김 배지: 아이콘만 흑백+살짝 투명 */
+.iconGray {
+  filter: grayscale(100%) drop-shadow(0 2px 4px rgba(0,0,0,.08));
+  opacity: 0.65;
+}
+
+
 .iconWrap {
   display: grid;
   place-items: center;
@@ -55,8 +82,52 @@
   color: #6b7280;
 }
 
+.locked {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
 .earned {}
 .locked {
   filter: grayscale(0.8);
   opacity: 0.7;
 }
+
+.emoji {
+  font-family: "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji",
+               "Twemoji Mozilla", "Segoe UI Symbol", sans-serif;
+  font-size: 40px;
+  line-height: 1;
+  display: inline-block;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.15));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.locked .emoji {
+  opacity: .6;
+  filter: grayscale(30%) drop-shadow(0 2px 4px rgba(0,0,0,.12));
+}
+
+.tile:hover .emoji { transform: translateY(-1px) scale(1.03); }
+.tile:active .emoji { transform: translateY(0) scale(1.01); }
+
+/* 리스트 타일 안의 이모지 */
+.emoji {
+  font-family: "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji",
+               "Twemoji Mozilla", "Segoe UI Symbol", sans-serif;
+  font-size: 40px;
+  line-height: 1;
+  display: inline-block;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.15));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.locked .emoji {
+  opacity: .6;
+  filter: grayscale(30%) drop-shadow(0 2px 4px rgba(0,0,0,.12));
+}
+
+.tile:hover .iconStar { transform: translateY(-1px) scale(1.03); }
+.tile:active .iconStar { transform: translateY(0)    scale(1.01); }

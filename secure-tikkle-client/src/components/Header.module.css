@@ -1,0 +1,108 @@
+.brand a,
+.brand a:visited,
+.navRight a,
+.navRight a:visited {
+  color: #000;
+  text-decoration: none;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid #eee;
+}
+
+.nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav:active {
+  transform: translateY(0.8px);
+}
+
+.brand {
+  font-weight: 800;
+  font-size: 2rem; 
+  letter-spacing: 0.2px;
+}
+
+.brand a,
+.brand a:visited,
+.brand a:hover,
+.brand a:active {
+  text-decoration: none;
+  color: inherit;         
+}
+
+.navRight {
+  margin-left: auto;           
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.94rem;
+}
+
+.navLoginInfo{
+  margin-left: 50px;            
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.84rem;
+}
+
+.navRight a {
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 10px;
+  border-radius: 10px;
+  transition: background 0.2s ease, transform 0.05s ease;
+}
+.navRight a:hover {
+  background: rgba(0,0,0,0.06);
+}
+.navRight a:active {
+  transform: translateY(1px);
+}
+
+.navRight a:visited {
+  text-decoration: none;
+  color: inherit;
+}
+
+.cta {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.05s ease;
+}
+
+.cta:hover {
+  background: #f8fafc;
+  border-color: #dbe3ea;
+}
+
+.cta:active {
+  transform: translateY(1px);
+}
+
+.user {
+  font-weight: 600;
+  color: #334155;
+}
+
+.navRight a:focus-visible,
+.cta:focus-visible {
+  outline: 2px solid #94a3b8;
+  outline-offset: 2px;
+  border-radius: 10px;
+}

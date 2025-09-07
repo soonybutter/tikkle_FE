@@ -7,6 +7,10 @@ import GoalNew from './pages/GoalNew';
 import RequireAuth from './routes/RequireAuth';
 import BadgesPage from './pages/Badges';
 import BadgeAnnouncerProvider from './providers/BadgeAnnouncerProvider';
+import Home from './pages/Home';
+import Friends from './pages/Friends';
+import GoalsListPage from './pages/GoalsListPage';
+import './index.css';
 
 export default function App() {
   return (
@@ -14,6 +18,7 @@ export default function App() {
       <Header />
         <Routes>
           {/* 공개 라우트 */}
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
 
           {/* 보호 라우트 */}
@@ -22,6 +27,8 @@ export default function App() {
             <Route path="/goals/new" element={<GoalNew />} />
             <Route path="/goals/:id" element={<GoalDetail />} />
             <Route path="/badges" element={<BadgesPage />} />
+            <Route path="/friends" element={<Friends />} />
+             <Route path="/goals" element={<GoalsListPage />} />
           </Route>
 
           {/* fallback */}

@@ -122,7 +122,8 @@ function BadgeCard({ badge, onClose }: { badge: BadgeDto; onClose: () => void })
   return (
     <div className={modalCss.inner}>
       <div className={modalCss.iconRing}>
-        <img src={badge.icon} alt="" className={modalCss.iconLarge} />
+        <span className={modalCss.emojiLarge} role="img" aria-label={badge.title}>
+        </span>
       </div>
       <h2 className={modalCss.title}>
         {badge.title}

@@ -105,7 +105,7 @@ export default function Dashboard() {
   if (err) return <div role="alert">{err}</div>;
 
   return (
-    <main className={styles.main}>
+    <main className="container page">
       <h1>내 목표</h1>
       <CreateGoalForm onCreated={load} />
       <p className={styles.createLink}>

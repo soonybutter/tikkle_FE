@@ -23,6 +23,19 @@
   text-align: center;
 }
 
+.emojiXL {
+  font-size: clamp(84px, 14vw, 140px);
+}
+
+/* 이모지 컨테이너(링)도 함께 키우면 비율이 예뻐요 */
+.iconRingXL {
+  width: 132px;
+  height: 132px;
+  /* 선택: 배경 하이라이트도 살짝 키우기 */
+  background: radial-gradient(160px 90px at 50% -10%, #fef3c7, transparent), #fff7ed;
+}
+
+
 /* 아이콘 링 */
 .iconRing {
   width: 120px;
