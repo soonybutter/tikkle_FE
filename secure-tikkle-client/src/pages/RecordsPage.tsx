@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Auth, Goals } from '../api';
 import type { GoalSummaryDto } from '../api';
-import styles from './Records.module.css'; // ← 새 CSS 모듈
+import styles from './Records.module.css';
 
 export default function RecordsPage() {
   const nav = useNavigate();
@@ -52,6 +52,12 @@ export default function RecordsPage() {
               </Link>
             );
           })}
+
+          {/* ✅ 맨 마지막: 새 목표 추가 카드 */}
+          <Link to="/goals/new" className={`${styles.goalCard} ${styles.addCard}`} aria-label="새 목표 추가">
+            <div className={styles.addRing}><span className={styles.addPlus}>＋</span></div>
+            <div className={styles.addTitle}>새 목표 추가</div>
+          </Link>
         </div>
       )}
     </main>
