@@ -140,13 +140,13 @@
 .newsRail {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(240px, 300px);
-  gap: 10px;
+  grid-auto-columns: minmax(230px, 300px);
+  gap: 9px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   padding-bottom: 6px;
-  -ms-overflow-style: none;      /* IE/Edge */
-  scrollbar-width: none;         /* Firefox */
+  -ms-overflow-style: none;      
+  scrollbar-width: none;         
   -webkit-overflow-scrolling: touch;
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
           mask-image: linear-gradient(to right, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);

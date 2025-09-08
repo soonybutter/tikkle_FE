@@ -227,7 +227,6 @@ export default function Home() {
       return (first?.offsetWidth ?? 260) + gap;
     };
 
-    // ✅ let → const, 그리고 window.clearInterval 사용
     const intervalId = window.setInterval(() => {
       if (newsPaused) return;
       const step = stepCalc();
