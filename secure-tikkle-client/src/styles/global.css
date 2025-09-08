@@ -1,32 +1,56 @@
+/* 1) 전역 폰트: OmuDaye */
 @font-face {
-  font-family: 'HumanBeomseokNeo';
-  src:
-    url('../../public/fonts/Human-BeomseokNeo-Regular.ttf') format('woff2'),
-    url('../../public/fonts/Human-BeomseokNeo-Regular.ttf') format('truetype');
-  font-weight: 400;
+  font-family: 'OmuDaye';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
+  font-weight: 400; /* 이 폰트는 사실상 단일 굵기 */
   font-style: normal;
   font-display: swap;
 }
 
+/* 2) 뉴스 제목용: LINE Seed KR (Regular + Bold) */
+@font-face {
+  font-family: 'LINESeedKR';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.1/LINESeedKR-Rg.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LINESeedKR';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.1/LINESeedKR-Bd.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 3) 전역 적용 */
 :root {
-  --font-sans: 'HumanBeomseokNeo',
-               'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic',
-               system-ui, -apple-system, 'Segoe UI', Roboto,
-               'Helvetica Neue', Arial, sans-serif;
+  --font-sans: 'OmuDaye', 'Noto Sans KR', system-ui, -apple-system, sans-serif;
 }
 
-html, body, #root {
-  font-family: 'GowunDodum', system-ui, -apple-system, 'Segoe UI', Roboto,
-               'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+html, body, input, button, textarea, select {
+  font-family: var(--font-sans);
   font-weight: 400;
-  line-height: 1.5;
+  letter-spacing: .005em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis-weight: none; /* 가짜 볼드 방지 */
 }
 
-body, * { font-family: var(--font-ui); }
+/* 4) 뉴스 제목만 LINE Seed KR 사용 */
+.newsTitle {
+  font-family: 'LINESeedKR', var(--font-sans), system-ui, sans-serif;
+  font-weight: 700;         /* 타이틀은 Bold가 깔끔 */
+  letter-spacing: .005em;
+}
 
-button, input, textarea, select {
+/* (옵션) 뉴스 영역 다른 텍스트는 전역 폰트 상속 */
+.newsSection,
+.newsSection :where(.sectionTitle, .newsRail, .newsCard, .newsMeta, .newsSource) {
   font-family: inherit;
 }
+
+b, strong { font-weight: 600; }
 
 code, pre, kbd, samp {
   font-family: inherit;

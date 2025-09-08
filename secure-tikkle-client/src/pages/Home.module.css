@@ -1,3 +1,4 @@
+
 .cta,
 .cta:link,
 .cta:visited,
@@ -306,7 +307,9 @@
   padding: 10px 48px;                   
 }
 
-.badgeRail::-webkit-scrollbar { height: 8px; }
+.badgeRail::-webkit-scrollbar {
+  display: none;                     /* Chrome/Safari */
+}
 .badgeRail::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 999px; }
 .badgeRail::-webkit-scrollbar-track { background: transparent; }
 

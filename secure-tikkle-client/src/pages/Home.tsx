@@ -340,9 +340,10 @@ export default function Home() {
       </section>
 
       {/* News (항상 노출 가능) */}
-      <section className={styles.section}>
+      <section className={styles.section} >
         <h2 className={styles.sectionTitle}>오늘의 경제 뉴스</h2>
-        {loading && news.length === 0 ? (
+        <div className={styles.newsSection}>
+          {loading && news.length === 0 ? (
           <div className={styles.empty}>불러오는 중…</div>
         ) : news.length === 0 ? (
           <div className={styles.empty}>가져올 뉴스가 없어요. 잠시 후 다시 시도해 주세요.</div>
@@ -371,6 +372,9 @@ export default function Home() {
             ))}
           </div>
         )}
+
+        </div>
+        
       </section>
 
       {/* Goals & Badges: 로그인된 경우에만 노출 */}
