@@ -4,6 +4,7 @@ import { Auth, Goals, Badges } from '../api';
 import type { GoalSummaryDto, BadgeDto } from '../api';
 import styles from './Home.module.css';
 
+
 type NewsItem = {
   title: string;
   url: string;
@@ -185,6 +186,11 @@ export default function Home() {
   const NEWS_CACHE_KEY = 'home_news_v1';
   const NEWS_TTL_MS = 5 * 60 * 1000;
 
+  // 뉴스 스크롤 효과
+  const newsRailRef = useRef<HTMLDivElement>(null);
+  const [newsPaused, setNewsPaused] = useState(false);
+
+
   function normalizeNews(items: NewsItem[]): NewsItem[] {
     const seen = new Set<string>();
     return items
@@ -209,6 +215,34 @@ export default function Home() {
     return d.toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' });
   }
 
+  // 자동스크롤 효과 
+  useEffect(() => {
+    const rail = newsRailRef.current;
+    if (!rail || news.length === 0) return;
+
+    const stepCalc = () => {
+      const first = rail.querySelector(`.${styles.newsCard}`) as HTMLElement | null;
+      const gap =
+        parseFloat(getComputedStyle(rail).columnGap || getComputedStyle(rail).gap || '10') || 10;
+      return (first?.offsetWidth ?? 260) + gap;
+    };
+
+    // ✅ let → const, 그리고 window.clearInterval 사용
+    const intervalId = window.setInterval(() => {
+      if (newsPaused) return;
+      const step = stepCalc();
+      const max = rail.scrollWidth - rail.clientWidth - 1;
+
+      if (rail.scrollLeft >= max) {
+        rail.scrollTo({ left: 0, behavior: 'auto' });
+      } else {
+        rail.scrollBy({ left: step, behavior: 'smooth' });
+    }
+  }, 3000);
+
+    return () => window.clearInterval(intervalId);
+  }, [newsPaused, news.length]);
+
   useEffect(() => {
     let mounted = true;
     if (authed === null) return;
@@ -225,7 +259,7 @@ export default function Home() {
           setGoals([]); setBadges([]);
         }
 
-        // ✅ 뉴스: 캐시 → 네트워크 순서로
+        //  뉴스: 캐시 → 네트워크 순서로
         try {
           const raw = sessionStorage.getItem(NEWS_CACHE_KEY);
           if (raw) {
@@ -314,7 +348,14 @@ export default function Home() {
         ) : news.length === 0 ? (
           <div className={styles.empty}>가져올 뉴스가 없어요. 잠시 후 다시 시도해 주세요.</div>
         ) : (
-          <div className={styles.newsRail}>
+          <div
+            ref={newsRailRef}
+            className={styles.newsRail}
+            onMouseEnter={() => setNewsPaused(true)}
+            onMouseLeave={() => setNewsPaused(false)}
+            onFocus={() => setNewsPaused(true)}
+            onBlur={() => setNewsPaused(false)}
+          >
             {news.map((n, i) => (
               <a key={i} className={styles.newsCard} href={n.url} target="_blank" rel="noreferrer">
                 <div className={styles.newsThumb}>

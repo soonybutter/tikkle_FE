@@ -1,7 +1,7 @@
 @font-face {
-  font-family: 'OngleipRyuryu';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2405-2@1.0/Ownglyph_ryurue-Rg.woff2') format('woff2');
-  font-weight: 400;       /* 제공 파일이 사실상 한 굵기 */
+  font-family: 'Suit';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Thin.woff2') format('woff2');
+  font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
