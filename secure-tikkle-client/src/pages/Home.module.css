@@ -178,8 +178,13 @@
 }
 
 .newsSource { 
-    font-size:.85rem; 
-    color:#777; 
+  color:#6b7280; 
+  font-size:.9rem; 
+}
+
+.newsTime { 
+  color:#9ca3af; 
+  margin-left:2px; 
 }
 
 .newsTitle { 

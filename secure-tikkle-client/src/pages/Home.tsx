@@ -12,8 +12,6 @@ type NewsItem = {
   image?: string | null;
 };
 
-const NEWS_URL = import.meta.env.VITE_NEWS_URL ?? '/api/news';
-
 type StrMap = Record<string, unknown>;
 const isObj = (v: unknown): v is StrMap => typeof v === 'object' && v !== null;
 const toStr = (v: unknown): string | undefined => (typeof v === 'string' ? v : undefined);
@@ -181,6 +179,86 @@ export default function Home() {
   ];
   const tip = tips[Math.floor(Math.random() * tips.length)];
 
+  // 뉴스 API
+  const NEWS_URL = import.meta.env.VITE_NEWS_URL ?? '/api/news';
+  // 5분 캐시 (호출 제한/지연 대비)
+  const NEWS_CACHE_KEY = 'home_news_v1';
+  const NEWS_TTL_MS = 5 * 60 * 1000;
+
+  function normalizeNews(items: NewsItem[]): NewsItem[] {
+    const seen = new Set<string>();
+    return items
+      .filter(n => {
+        const key = n.url;
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .sort((a, b) =>
+        new Date(b.publishedAt ?? 0).getTime() - new Date(a.publishedAt ?? 0).getTime()
+      );
+  }
+
+  function formatAgo(iso?: string) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const diff = (Date.now() - d.getTime()) / 1000;
+    if (diff < 60) return '방금 전';
+    if (diff < 3600) return `${Math.floor(diff/60)}분 전`;
+    if (diff < 86400) return `${Math.floor(diff/3600)}시간 전`;
+    return d.toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' });
+  }
+
+  useEffect(() => {
+    let mounted = true;
+    if (authed === null) return;
+
+    (async () => {
+      try {
+        // 로그인 데이터
+        if (authed) {
+          const [g, b] = await Promise.all([Goals.list(), Badges.list()]);
+          if (!mounted) return;
+          setGoals(g);
+          setBadges(b);
+        } else {
+          setGoals([]); setBadges([]);
+        }
+
+        // ✅ 뉴스: 캐시 → 네트워크 순서로
+        try {
+          const raw = sessionStorage.getItem(NEWS_CACHE_KEY);
+          if (raw) {
+            const cached = JSON.parse(raw) as { ts: number; data: NewsItem[] };
+            if (Date.now() - cached.ts < NEWS_TTL_MS) {
+              if (mounted) setNews(cached.data);
+            }
+          }
+
+          if (!raw || Date.now() - (JSON.parse(raw)?.ts ?? 0) >= NEWS_TTL_MS) {
+            const ac = new AbortController();
+            try {
+              const r = await fetch(NEWS_URL, { credentials: 'omit', signal: ac.signal });
+              const j: unknown = await r.json();
+              if (!mounted) return;
+              const items = normalizeNews(parseNewsResponse(j));
+              setNews(items);
+              sessionStorage.setItem(NEWS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: items }));
+            } catch {
+              if (mounted) setNews(prev => prev.length ? prev : []); // 실패 시 캐시/이전값 유지
+            }
+          }
+        } catch {
+          if (mounted) setNews([]);
+        }
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+
+    return () => { mounted = false; };
+  }, [authed]);
+
   // authed === null인 짧은 동안만 스켈레톤/대기, 비로그인으로 확정되면 바로 인트로 렌더
   if (authed === null) return <main className="container page">로딩 중…</main>;
 
@@ -243,7 +321,10 @@ export default function Home() {
                   {n.image ? <img src={n.image} alt="" /> : <span className={styles.newsEmoji}>📰</span>}
                 </div>
                 <div className={styles.newsMeta}>
-                  <div className={styles.newsSource}>{n.source ?? 'News'}</div>
+                  <div className={styles.newsSource}>
+                      {n.source ?? 'News'}
+                      {n.publishedAt && <span className={styles.newsTime}> · {formatAgo(n.publishedAt)}</span>}
+                  </div>
                   <div className={styles.newsTitle}>{n.title}</div>
                 </div>
               </a>

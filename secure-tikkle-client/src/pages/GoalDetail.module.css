@@ -31,15 +31,20 @@
   background: #e8eaee; 
 }
 
-.title {
-  margin: 6px 0 8px;
-  font-size: clamp(1.4rem, 1.2vw + 1rem, 1.8rem);
-  font-weight: 800;
+.title { 
+  margin: 14px 0 10px; 
+  font-weight: 600;
 }
 
-/* 금액/진행률 */
-.amount { margin: 8px 0 6px; font-weight: 700; }
-.progressWrap { display: grid; gap: 6px; margin-bottom: 12px; }
+.amount { 
+  margin: 10px 0 16px; 
+}
+
+.progressWrap { 
+  gap: 8px; 
+  margin: 0 0 18px; 
+}
+
 .progressTrack {
   width: 100%;
   height: 8px;
@@ -118,6 +123,7 @@
   transition: transform .08s ease, filter .2s ease, opacity .2s ease, box-shadow .2s ease;
   background: linear-gradient(135deg, #ff6ea6 0%, #F5276C 100%);
   box-shadow: 0 12px 24px rgba(245,39,108,.22);
+  
 }
 
 .btnPrimary   { 
@@ -125,6 +131,7 @@
   padding: 0 14px; 
   border-radius: 12px; 
   font-size: .98rem; 
+  margin-top:8px; 
 }
 
 .btnPrimarySm { 
@@ -132,6 +139,7 @@
   padding: 0 12px; 
   border-radius: 10px; 
   font-size: .9rem; 
+  margin-top:8px;
 }
 
 .btnPrimary:hover:not(:disabled),
@@ -161,9 +169,14 @@
   padding: 0 10px;
   cursor: pointer;
   font-size: .9rem;
+  margin-top:8px; 
 }
 .btnGhost:hover, .btnGhostSm:hover { background: #f9fafb; }
-.btnGhostSm { height: 34px; }
+
+.btnGhostSm { 
+  height: 34px; 
+  
+}
 
 .btnPrimary,
 .btnDanger {
@@ -236,7 +249,10 @@
   font-size: 12px;
 }
 
-.logActions { display: flex; gap: 6px; align-items: center; }
+.logActions {
+  justify-self: end;  /* 그리드 아이템이라면 오른쪽 끝 */
+  margin-left: auto;  /* 혹시 플렉스 컨텍스트라면 자동 여백으로 오른쪽 밀기 */
+}
 
 /* 인라인 수정 행 */
 .editRow {
@@ -246,7 +262,13 @@
   gap: 8px;
   align-items: center;
 }
-.editActions { display: flex; gap: 6px; }
+
+.editActions {
+  display: flex;
+  gap: 6px;
+  grid-column: 3;     
+  justify-self: end;  
+}
 
 /* 상단 ‘목표 수정’ 카드 */
 .editCard {
@@ -279,10 +301,18 @@
   
 }
 
+.form .btnPrimary,
+.form .btnPrimarySm,
+.form .btnGhost,
+.form .btnGhostSm,
+.form .btnDanger {
+  justify-self: end;  /* 각 버튼이 자신의 그리드 셀 오른쪽으로 */
+}
+
 /* 반응형 */
 @media (max-width: 680px) {
-  .form { grid-template-columns: 1fr; }
-  .editRow { grid-template-columns: 1fr; }
-  .editRow2 { grid-template-columns: 1fr; }
-  .logActions { justify-self: end; }
+  .editActions {
+    grid-column: 1;   /* 한 칼럼 레이아웃에서는 1로 되돌림 */
+    justify-self: end;
+  }
 }
