@@ -1,13 +1,18 @@
 @font-face {
-  font-family: 'GowunDodum';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunDodum-Regular.woff') format('woff');
+  font-family: 'HumanBeomseokNeo';
+  src:
+    url('../../public/fonts/Human-BeomseokNeo-Regular.ttf') format('woff2'),
+    url('../../public/fonts/Human-BeomseokNeo-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
+
 :root {
-  --app-font: 'OmuDaye', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic',
-              system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-sans: 'HumanBeomseokNeo',
+               'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic',
+               system-ui, -apple-system, 'Segoe UI', Roboto,
+               'Helvetica Neue', Arial, sans-serif;
 }
 
 html, body, #root {

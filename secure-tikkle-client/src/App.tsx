@@ -13,6 +13,7 @@ import GoalsListPage from './pages/GoalsListPage';
 import RecordsPage from './pages/RecordsPage';
 import RequireGuest from './routes/RequireGuest'; 
 import Landing from './pages/Landing';
+import InviteAccept from './pages/InviteAccept';
 
 import './index.css';
 
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/friends" element={<Friends />} />
           <Route path="/goals" element={<GoalsListPage />} />
           <Route path="/records" element={<RecordsPage />} />
+          <Route path="/join/:code" element={<InviteAccept/>} />
         </Route>
 
         {/* 호환/폴백 */}

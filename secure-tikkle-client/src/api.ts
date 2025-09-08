@@ -120,3 +120,52 @@ export const Savings = {
 export const Badges = {
   list: () => get<BadgeDto[]>('/api/badges'),
 };
+
+// 타입
+
+export type LeaderRow = {
+  userId: number;
+  name: string;
+  avatar?: string;
+  total: number;
+  last30d: number;
+};
+
+export type GroupMemberDto = {
+  userId: number;
+  name: string;
+  avatar?: string;
+  total: number;
+  last30d: number;
+};
+
+export type GroupDetailDto = {
+  id: number;
+  members: GroupMemberDto[];
+  name?: string; 
+};
+
+export type RankGroup = {
+  id: number;
+  name: string;
+  memberCount?: number; 
+};
+
+export type RankInvite = { 
+  code: string; 
+  expiresAt: string; 
+  maxUses: number; 
+  used: number 
+};
+
+// API
+export const Rank = {
+  myGroups: () => get<RankGroup[]>('/api/rank/groups'),
+  createGroup: (name: string) => post<RankGroup>('/api/rank/groups', { name }),
+  createInvite: (groupId: number, ttlHours = 72, maxUses = 50) =>
+    post<RankInvite>(`/api/rank/groups/${groupId}/invite`, { ttlHours, maxUses }),
+  joinByCode: (code: string) => post<RankGroup>('/api/rank/join', { code }),
+  //  반환 타입을 GroupDetailDto로 통일
+  groupDetail: (id: number) => get<GroupDetailDto>(`/api/rank/groups/${id}`),
+  leave: (id: number) => del<{ ok: boolean }>(`/api/rank/groups/${id}/leave`),
+};

@@ -52,14 +52,11 @@ export default function Intro() {
     return () => io.disconnect();
   }, []);
 
-  const today = new Date().toLocaleDateString('ko-KR', { dateStyle: 'long' });
-
   return (
     <main className={styles.main}>
       {/* Hero */}
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <div className={styles.kicker}>{today}</div>
           <h1 className={styles.title}>
             작은 절약이 쌓여 <span className={styles.accent}>큰 목표</span>가 됩니다.
           </h1>
