@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 :root{
   --blue: #1b64da;
   --blue-2:#3182f6;
@@ -17,15 +21,19 @@
     #fff;
 }
 
+.in {}
+
 /* Hero */
 .hero{
-  position:relative;
-  padding:64px 12px 40px;
+  position: relative;
+  min-height: 92svh;         /* 화면 거의 꽉 채우고 */
+  display: grid;
+  place-items: center;        
 }
 .heroInner{
   max-width: 980px;
   margin: 0 auto;
-  text-align: left;
+  text-align: center;          
 }
 .kicker{
   color: var(--muted);
@@ -38,6 +46,7 @@
   line-height: 1.15;
   font-size: clamp(2rem, 2.6vw + 1rem, 3.2rem);
   color: var(--ink);
+  text-align: center;
 }
 .accent{
   background: linear-gradient(135deg, var(--blue-2), var(--blue));
@@ -48,16 +57,16 @@
 .subtitle{
   color: var(--muted);
   font-size: clamp(1rem, .6vw + .85rem, 1.15rem);
-  margin: 12px 0 18px;
   max-width: 56ch;
+  text-align: center;
 }
 
 /* 유리 카드 */
-.glassWrap{
-  perspective:1000px;
-  margin:18px 0 18px;
+.glassWrap{                    
   max-width: 540px;
+  margin: 22px auto 18px;
 }
+
 .glassCard{
   transform-style: preserve-3d;
   transition: transform .15s ease, box-shadow .25s ease;
@@ -68,7 +77,6 @@
   box-shadow: 0 22px 48px rgba(0,0,0,.08);
   padding: 16px;
 }
-.glassCard:hover{ box-shadow: 0 28px 64px rgba(0,0,0,.10); }
 .glassHead{ font-weight: 800; margin-bottom: 10px; }
 
 .progressTrack{
@@ -81,12 +89,15 @@
   border-radius: 999px;
 }
 .progressText{ color:#5b6472; font-size:.92rem; margin:8px 0 6px; }
-.miniList{ margin:0; padding-left:18px; color:#2a3140; }
+.miniList{ margin:0; padding-left:18px; color:#2a3140; list-style: none; margin-top:25px; }
 
+.miniList > li{
+  margin-top: 13px;
+}
 /* CTA */
 .ctaLarge{
   display:inline-block;
-  margin-top:8px;
+  margin-top:20px;
   padding:12px 18px;
   border-radius: 999px;
   font-weight: 800;
@@ -97,12 +108,12 @@
   transition: transform .08s ease, filter .2s ease, box-shadow .2s ease;
 }
 .ctaLarge:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-.scrollHint{
-  display:inline-block;
-  margin-left:12px;
-  color: var(--muted);
-  text-decoration:none;
+
+.scrollHint{                   
+  display: inline-block;
+  margin: 8px 0 0;
 }
+
 .scrollHint:hover{ color: var(--ink-2); }
 
 /* 블롭 배경 */
@@ -121,50 +132,38 @@
 /* Features */
 
 .fIcon{
-  width: 72px;
-  height: 72px;
-  border-radius: 16px;
-  background: linear-gradient(180deg,#f3f7ff,#eef4ff);
-  border: 1px solid rgba(0,0,0,.06);
-  box-shadow: 0 8px 18px rgba(0,0,0,.06);
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  transform: translateZ(0);
-  transition: transform .2s ease, box-shadow .2s ease;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 auto 10px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 .feature {
-  background: #fff;
-  border: 1px solid rgba(0,0,0,.06);
-  border-radius: 14px;
-  box-shadow: 0 10px 24px rgba(0,0,0,.06);
-  padding: 16px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding-top: 35px !important;
+  text-align: center;
   opacity: 0;
-  transform: translateY(18px) translateX(var(--fly-x, 0)) scale(.98);
-  filter: blur(4px);
+  transform: translateY(14px);
+  filter: blur(3px);
   transition:
     opacity .6s ease,
     transform .6s cubic-bezier(.22,.61,.36,1),
-    filter .6s ease,
-    box-shadow .2s ease;
-  will-change: opacity, transform, filter;
+    filter .6s ease;
 }
-.featuresInner {
-  max-width: 720px;           
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr; 
-  gap: 12px;
+
+.featuresInner{
+  gap: 25px;                   
 }
-.features {
-  padding: 28px 12px 8px;
-}
-/* ✅ 뷰포트에 들어오면 또렷하게 정착 */
+
 .feature.in {
   opacity: 1;
   transform: none;
-  filter: blur(0);
+  filter: none;
 }
 
 .feature:nth-child(odd)  { --fly-x: -12px; }
@@ -187,39 +186,29 @@
 
 
 .fEmoji{
-  font-size: 40px;               /* ⬆️ 더 크게 */
+  font-size: clamp(48px, 6vw, 72px);  
   line-height: 1;
   display: inline-block;
-  will-change: transform, filter;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,.08));
 }
 
 
-.feature h3 { 
-    margin: 0 0 6px; 
-    font-size: 1.05rem; 
+.feature h3 {
+  margin: 4px 0 4px !important;
+  font-size: 1.58rem !important;
+
 }
 
-.feature p  { 
-    margin: 0; 
-    color: var(--muted); 
+.feature p {
+  margin: 0 !important;
+  color: var(--muted) !important;
 }
 
-.fIcon {
-  width: 36px; 
-  height: 36px; 
-  border-radius: 10px;
-  background: #f3f7ff; 
-  color: #1d4ed8;
-  display: grid; 
-  place-items: center;
-  margin-bottom: 8px; 
-  font-size: 18px;
-}
 
 /* Value band */
-.band{
-  padding: 28px 12px;
+.band{           
+  padding: 72px 12px;
+  margin-top:20px;
 }
 .bandInner{
   max-width:980px; margin:0 auto;
@@ -236,27 +225,20 @@
 }
 
 /* 로그인 섹션 */
-.loginSection{
-  padding: 24px 12px 56px; 
-  display:grid; 
-  place-items:center;
+.loginSection{   
+  padding: 88px 12px 96px;     
 }
 
 .loginCard{
-  width: 100%; 
-  max-width: 540px;
-  background:#fff; 
-  border:1px solid rgba(0,0,0,.06);
-  box-shadow: 0 8px 20px rgba(0,0,0,.06);
-  padding: 20px 16px; 
-  text-align:center;
+  width: clamp(260px, 42vw, 360px) !important; 
+  margin-inline: auto !important;             
 }
 
-.loginTitle{ 
-    margin: 6px 0 4px; 
-    font-size: clamp(1.4rem, 1.2vw + 1rem, 1.8rem); 
-    font-weight: 800; 
+.loginCard > *{ 
+  max-width: 100%;
 }
+
+.loginTitle { margin-top: 0; }
 
 .loginSub{ 
     color: var(--muted); 
@@ -270,8 +252,8 @@ a:focus-visible, .loginCard :where(a,button):focus-visible{
 }
 
 /* 스크롤 리빌 */
-.reveal{ opacity:0; transform: translateY(12px); }
-.revealed{ opacity:1; transform:none; transition: opacity .5s ease, transform .5s ease; }
+.reveal { opacity: 0; transform: translateY(12px); }
+.revealed { opacity: 1; transform: none; transition: opacity .5s ease, transform .5s ease; }
 
 /* 반응형 */
 @media (max-width: 920px){
@@ -300,4 +282,32 @@ a:focus-visible, .loginCard :where(a,button):focus-visible{
 @media (prefers-reduced-motion: reduce){
   .fEmoji{ animation: none !important; transform: none !important; }
   .fIcon{ transition: none; }
+}
+
+@media (max-width: 480px) {
+  .ctaLarge { width: 100%; }
+}
+
+@media (max-width: 640px) {
+  .blobA, .blobB { display: none; }
+}
+
+@media (max-width: 480px) {
+  .glassWrap { max-width: 92vw; }
+  .glassCard { padding: 12px; }
+  .progressText { font-size: .9rem; }
+}
+
+@media (min-width: 1024px) {
+  .featuresInner { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 32px; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .featuresInner { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 639px) {
+  .featuresInner { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .hero { min-height: 86svh; }
 }

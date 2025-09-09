@@ -6,6 +6,16 @@ export default function Intro() {
   const glassRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const sec = document.querySelector(`#features.${styles.features}`);
+    if (!sec) return;
+    const io = new IntersectionObserver((es) => {
+      es.forEach(en => en.isIntersecting && en.target.classList.add(styles.revealed));
+    }, { threshold: 0.05 });
+    io.observe(sec);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
     const items = document.querySelectorAll(`.${styles.feature}`);
     const io = new IntersectionObserver(
       (entries) => {
@@ -58,10 +68,11 @@ export default function Intro() {
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <h1 className={styles.title}>
-            작은 절약이 쌓여 <span className={styles.accent}>큰 목표</span>가 됩니다.
+            작은 절약이 쌓여 
+            <span className={styles.accent}> 큰 목표</span>가 됩니다.
           </h1>
           <p className={styles.subtitle}>
-            티끌을 기록하고, 목표를 채우세요. 빠르고 간결하게, 모두가 이해할 수 있는 방식으로.
+            티끌을 기록하고, 목표를 달성해보세요 ! 
           </p>
 
           <div
@@ -85,7 +96,6 @@ export default function Intro() {
           </div>
 
           <a href="#login" className={styles.ctaLarge}>소셜 로그인으로 시작하기</a>
-          <a href="#features" className={styles.scrollHint} aria-label="특징 섹션으로 이동">스크롤하여 보기 ↓</a>
         </div>
         {/* 배경 블롭 */}
         <div className={styles.blobA} />
@@ -93,11 +103,11 @@ export default function Intro() {
       </section>
 
       {/* Features */}
-    <section id="features" className={`${styles.features} ${styles.reveal}`}>
+    <section id="features" className={styles.features}>
     <div className={styles.featuresInner}>
         <div className={styles.feature}>
         <div className={styles.fIcon}><span className={styles.fEmoji} aria-hidden>🎮</span></div>
-        <h3>게이미피케이션</h3>
+        <h3>재미</h3>
         <p>배지·랭킹으로 재미있게 꾸준함을 만듭니다.</p>
         </div>
 
