@@ -278,7 +278,7 @@ export default function Home() {
               setNews(items);
               sessionStorage.setItem(NEWS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: items }));
             } catch {
-              if (mounted) setNews(prev => prev.length ? prev : []); // 실패 시 캐시/이전값 유지
+              if (mounted) setNews(prev => prev.length ? prev : []); 
             }
           }
         } catch {
@@ -292,7 +292,6 @@ export default function Home() {
     return () => { mounted = false; };
   }, [authed]);
 
-  // authed === null인 짧은 동안만 스켈레톤/대기, 비로그인으로 확정되면 바로 인트로 렌더
   if (authed === null) return <main className="container page">로딩 중…</main>;
 
   return (

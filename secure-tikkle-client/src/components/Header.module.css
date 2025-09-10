@@ -19,9 +19,11 @@
   max-width: 1200px;
   margin: 0 auto;
   height: 56px;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 12px;
+  padding-inline: 8px;
 }
 
 .nav:active {
@@ -30,24 +32,24 @@
 
 .brand {
   font-weight: 800;
-  font-size: 2rem; 
-  letter-spacing: 0.2px;
+  font-size: 2rem;
+  letter-spacing: 0.1px;
 }
-
 .brand a,
 .brand a:visited,
 .brand a:hover,
-.brand a:active {
-  text-decoration: none;
-  color: inherit;         
-}
+.brand a:active { color: inherit; }
 
 .navRight {
-  margin-left: auto;           
+  margin-left: 0;
   display: flex;
   align-items: center;
+  justify-content: flex-end; 
+  justify-self: end;         
   gap: 10px;
   font-size: 0.94rem;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .navLoginInfo{
@@ -63,14 +65,11 @@
   font-weight: 500;
   padding: 8px 10px;
   border-radius: 10px;
-  transition: background 0.2s ease, transform 0.05s ease;
+  transition: background .2s, transform .05s;
+  white-space: nowrap;   
 }
-.navRight a:hover {
-  background: rgba(0,0,0,0.06);
-}
-.navRight a:active {
-  transform: translateY(1px);
-}
+.navRight a:hover { background: rgba(0,0,0,.06); }
+.navRight a:active { transform: translateY(1px); }
 
 .navRight a:visited {
   text-decoration: none;
@@ -83,26 +82,31 @@
   border: 1px solid #e5e7eb;
   background: #fff;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.05s ease;
+  transition: background .2s, border-color .2s, transform .05s;
   text-decoration: none;
+  white-space: nowrap;   
+  flex: 0 0 auto;        
 }
+.cta:hover { background: #f8fafc; border-color: #dbe3ea; }
+.cta:active { transform: translateY(1px); }
+.cta:visited { text-decoration: none; }
 
-.cta:hover {
-  background: #f8fafc;
-  border-color: #dbe3ea;
-}
-
-.cta:active {
-  transform: translateY(1px);
-}
-
-.cta:visited{
-  text-decoration: none;
+.navLoginInfo{
+  margin-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.84rem;
+  min-width: 0;          
 }
 
 .user {
   font-weight: 600;
   color: #334155;
+  max-width: 38vw;       
+  overflow: hidden;
+  white-space: nowrap;  
+  text-overflow: ellipsis;
 }
 
 .navRight a:focus-visible,
@@ -110,4 +114,33 @@
   outline: 2px solid #94a3b8;
   outline-offset: 2px;
   border-radius: 10px;
+}
+
+@media (max-width: 640px) {
+
+  .nav { height: 52px; gap: 6px; }
+  .brand { font-size: clamp(18px, 5vw, 20px); }
+
+  .navRight { gap: 6px; }
+  .navRight a {
+    padding: 6px 4px;                       /* 링크 패딩 축소 */
+    font-size: clamp(10px, 2.8vw, 12px);    /* 글자 크기 축소 */
+    letter-spacing: -0.01em;
+    min-width: 0;
+  }
+
+  .navLoginInfo { gap: 6px; }
+  .user {
+    font-size: clamp(11px, 3.2vw, 13px);
+    max-width: clamp(90px, 34vw, 180px);    /* 이름 영역 폭 제한 */
+  }
+  .cta {
+    padding: 6px 8px;
+    font-size: clamp(11px, 3vw, 13px);
+  }
+}
+
+@media (max-width: 360px) {
+  .navRight a { padding: 5px 3px; font-size: 11px; }
+  .user { max-width: 28vw; }
 }

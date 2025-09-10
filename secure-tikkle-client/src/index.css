@@ -6,19 +6,16 @@
   font-display: swap;
 }
 
-/* 페이지 좌우 여백) */
 :root {
   --page-gutter: clamp(16px, 4vw, 32px);
   --page-max: 1200px; 
 }
 
-/* 모든 페이지에 좌우 여백 적용 */
 html, body {
   font-family: var(--app-font);
   padding-inline: var(--page-gutter);
 }
 
-/* 본문을 중앙 정렬하고 최대 너비 제한하고 싶다면 */
 .app-container {
   max-width: var(--page-max);
   margin-inline: auto;

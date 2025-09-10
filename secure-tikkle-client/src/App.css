@@ -18,6 +18,14 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -33,10 +41,12 @@
   }
 }
 
-.card {
-  padding: 2em;
+@media (max-width: 900px) {
+  .container { padding-inline: 16px; }
+  :root { --section-gap: 56px; }
+}
+@media (max-width: 600px) {
+  html { font-size: 15px; } 
+  .container { max-width: 100%; }
 }
 
-.read-the-docs {
-  color: #888;
-}
