@@ -42,9 +42,9 @@ export default function Header() {
         {authed ? (
           <div className={styles.navRight}>
             <Link to="/">홈</Link>
-            <Link to="/records">나의 티끌기록</Link>
+            <Link to="/records">내 티끌</Link>
             <Link to="/goals/new">새 목표</Link>
-            <Link to="/badges">배지현황</Link>
+            <Link to="/badges">배지</Link>
             <Link to="/friends">랭킹</Link>
           </div>
         ) : (
