@@ -115,9 +115,13 @@
   margin-block: 50px;            
 }
 
-.sectionTitle { 
-    margin: 0 0 12px; 
-    font-size: 1.4rem; 
+.badgeHead .sectionTitle{
+  margin: 0;
+  flex: 1 1 auto;                 /* 남는 공간을 제목에 */
+  min-width: 0;
+  white-space: nowrap;            /* 줄바꿈 X */
+  overflow: hidden;
+  text-overflow: ellipsis;        /* 너무 길면 … */
 }
 
 /* 진행률 바 (로컬) */
@@ -289,10 +293,26 @@
   user-select: none;
 }
 
-.badgeHead { 
-    display:flex; 
-    align-items:center; 
-    justify-content:space-between; 
+.badgeHead{
+  display: grid;
+  grid-template-columns: 1fr auto; /* 좌: 제목 늘어남 / 우: 링크 고정 */
+  align-items: center;
+  gap: 10px;
+  text-align: left;                 /* 상위 text-align:center 무력화 */
+  margin: 6px 0 12px;
+}
+
+.badgeHead .sectionTitle{
+  margin: 0;
+  font-weight: 700;
+  white-space: nowrap;              /* 줄바꿈 금지 */
+  overflow: hidden;
+  text-overflow: ellipsis;          /* 길면 … */
+}
+
+.badgeHead .linkBtn{
+  justify-self: end;                /* 오른쪽 끝 정렬 */
+  white-space: nowrap;
 }
 
 .badgeRail {
@@ -532,7 +552,7 @@
   .stats { grid-template-columns: 1fr; }    
   .cta, .linkBtn { width: 100%; }           
   .sectionTitle { font-size: 1.2rem; }
-  .badgeRail { --gap: 14px; }
+  .badgeRail { --gap: 13px; }
 }
 
 @media (min-width: 900px) {
@@ -550,6 +570,11 @@
 }
 @media (max-width: 480px) {
   .badgeRail { --badge-size: 78px; }
+}
+
+@media (max-width: 480px){
+  .badgeHead .sectionTitle{ font-size: 1.05rem; }
+  .badgeHead .linkBtn{ font-size: .95rem; }
 }
 
 .page {
