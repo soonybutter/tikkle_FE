@@ -1,11 +1,10 @@
-const API =
+export const API_BASE =
   import.meta.env.VITE_API_URL ??
-  (location.hostname.endsWith('pages.dev') || location.hostname === 'tikkle.pages.dev'
-    ? 'https://tikkle-api.koreacentral.cloudapp.azure.com'
-    : 'http://localhost:8080');
+  ((typeof location !== 'undefined') &&
+   (location.hostname.endsWith('pages.dev') || location.hostname === 'tikkle.pages.dev')
+    ? 'https://tikkle-api.koreacentral.cloudapp.azure.com' // Pages 도메인일 때 기본
+    : 'http://localhost:8080');                              // 로컬 개발 기본
 
-export const API_BASE = API;  
-    
 export class ApiError extends Error {
   constructor(public status: number, public data?: unknown) {
     super(`API Error: ${status}`);
@@ -13,7 +12,7 @@ export class ApiError extends Error {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(API + path, {
+  const res = await fetch(API_BASE + path, {
     credentials: 'include',
     headers: { 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
     ...init,
