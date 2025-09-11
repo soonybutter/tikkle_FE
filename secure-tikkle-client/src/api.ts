@@ -1,10 +1,10 @@
-export const API_BASE =
+const API =
   import.meta.env.VITE_API_URL ??
   (location.hostname.endsWith('pages.dev') || location.hostname === 'tikkle.pages.dev'
-    ? 'https://tikkle-api.koreacentral.cloudapp.azure.com'  // 프로덕션/프리뷰 기본
-    : 'http://localhost:8080');       
+    ? 'https://tikkle-api.koreacentral.cloudapp.azure.com'
+    : 'http://localhost:8080');
 
-const API = API_BASE;    
+export const API_BASE = API;  
     
 export class ApiError extends Error {
   constructor(public status: number, public data?: unknown) {
