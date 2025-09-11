@@ -11,12 +11,21 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
+  // 모든 케이스(Record, 배열, Headers, undefined)를 Headers로 정규화
+  const headers = new Headers(init.headers);
+
+  // body가 있을 때만 Content-Type 자동 설정 (이미 있으면 건드리지 않음)
+  if (init.body != null && !headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
+
   const res = await fetch(API_BASE + path, {
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
     ...init,
+    headers, // ← 항상 Headers 객체
   });
+
   if (!res.ok) {
     const data: unknown = await res.json().catch(() => undefined);
     throw new ApiError(res.status, data);
