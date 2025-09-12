@@ -1,3 +1,4 @@
+/* 공통 링크 색상 */
 .brand a,
 .brand a:visited,
 .navRight a,
@@ -6,6 +7,7 @@
   text-decoration: none;
 }
 
+/* 상단 고정 헤더 */
 .header {
   position: sticky;
   top: 0;
@@ -15,49 +17,56 @@
   border-bottom: 1px solid #eee;
 }
 
+/* 네비게이션 그리드: 데스크탑 기본 1행 3열 */
 .nav {
   max-width: 1200px;
   margin: 0 auto;
   height: 56px;
   display: grid;
+  grid-template-areas: "brand links login";
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 12px;
   padding-inline: 8px;
 }
+.nav:active { transform: translateY(0.8px); }
 
-.nav:active {
-  transform: translateY(0.8px);
-}
-
+/* 브랜드(좌측) */
 .brand {
+  grid-area: brand;
   font-weight: 800;
   font-size: 2rem;
   letter-spacing: 0.1px;
+  white-space: nowrap; /* 모바일에서 줄바꿈 방지 */
 }
 .brand a,
 .brand a:visited,
 .brand a:hover,
 .brand a:active { color: inherit; }
 
+/* 가운데 링크 영역 */
 .navRight {
+  grid-area: links;
   margin-left: 0;
   display: flex;
   align-items: center;
-  justify-content: flex-end; 
-  justify-self: end;         
+  justify-content: flex-end;
+  justify-self: end;
   gap: 10px;
   font-size: 0.94rem;
-  min-width: 0;
-  overflow: hidden;
+  min-width: 0;           /* grid에서 오버플로 제어 */
+  overflow: visible;       /* 데스크탑은 숨김/스크롤 X */
 }
 
+/* 우측 로그인/유저 정보 */
 .navLoginInfo{
-  margin-left: 50px;            
+  grid-area: login;
+  margin-left: 50px;
   display: flex;
   align-items: center;
   gap: 12px;
   font-size: 0.84rem;
+  min-width: 0;
 }
 
 .navRight a {
@@ -66,15 +75,12 @@
   padding: 8px 10px;
   border-radius: 10px;
   transition: background .2s, transform .05s;
-  white-space: nowrap;   
+  white-space: nowrap; /* 단어 줄바꿈 금지 */
+  flex: 0 0 auto;      /* 스크롤 컨테이너에서 줄지 않게 */
 }
 .navRight a:hover { background: rgba(0,0,0,.06); }
 .navRight a:active { transform: translateY(1px); }
-
-.navRight a:visited {
-  text-decoration: none;
-  color: inherit;
-}
+.navRight a:visited { text-decoration: none; color: inherit; }
 
 .cta {
   padding: 8px 12px;
@@ -84,31 +90,23 @@
   cursor: pointer;
   transition: background .2s, border-color .2s, transform .05s;
   text-decoration: none;
-  white-space: nowrap;   
-  flex: 0 0 auto;        
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 .cta:hover { background: #f8fafc; border-color: #dbe3ea; }
 .cta:active { transform: translateY(1px); }
 .cta:visited { text-decoration: none; }
 
-.navLoginInfo{
-  margin-left: 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.84rem;
-  min-width: 0;          
-}
-
 .user {
   font-weight: 600;
   color: #334155;
-  max-width: 38vw;       
+  max-width: 38vw;
   overflow: hidden;
-  white-space: nowrap;  
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
+/* 접근성 포커스 */
 .navRight a:focus-visible,
 .cta:focus-visible {
   outline: 2px solid #94a3b8;
@@ -116,35 +114,72 @@
   border-radius: 10px;
 }
 
+/* =========================
+   모바일 대응
+   ========================= */
 @media (max-width: 640px) {
+  /* 헤더 높이는 자동(2행 구조) */
+  .nav{
+    height: auto;
+    grid-template-areas:
+      "brand login"
+      "links links";
+    grid-template-columns: 1fr auto;
+    row-gap: 6px;
+    padding-block: 6px;
+    align-items: center;
+  }
 
-   /* 1) Tikkle 로고 더 크게 */
-  .brand{ font-size: clamp(22px, 6.4vw, 26px); }
+  /* 브랜드는 절대 줄바꿈 금지 + 크기 자동 클램프 */
+  .brand{
+    font-size: clamp(22px, 6.4vw, 26px);
+    line-height: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-  .nav{ height: 52px; gap: 6px; }
+  /* 링크 바: 2행 전체 폭 + 가로 스크롤 */
+  .navRight{
+    justify-content: flex-start;
+    justify-self: stretch;
+    width: 100%;
+    gap: 6px;
 
-  /* 2) 링크가 한 줄에 모두 들어오도록 미세 조정 */
-  .navRight{ gap: 6px; }
+    overflow-x: auto;         /* ★ 깨짐 대신 스크롤 */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+
+    /* 스크롤바 최소화(옵션) */
+    scrollbar-width: thin;
+  }
+  .navRight::-webkit-scrollbar { height: 6px; }
+  .navRight::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 999px; }
+  .navRight::-webkit-scrollbar-track { background: transparent; }
+
   .navRight a{
-    padding: 6px 5px;
-    font-size: clamp(11px, 2.7vw, 12px);
+    padding: 6px 6px;
+    font-size: clamp(11px, 2.9vw, 12px);
     letter-spacing: -0.01em;
   }
 
-  .navLoginInfo{ gap: 6px; }
+  /* 로그인/유저영역 간격 축소 */
+  .navLoginInfo{
+    margin-left: 0;
+    gap: 8px;
+  }
   .user{
     font-size: clamp(11px, 3.2vw, 13px);
-    max-width: clamp(72px, 28vw, 140px);  /* 이름은 말줄임 */
+    max-width: clamp(72px, 28vw, 140px);
   }
   .cta{
     padding: 6px 8px;
     font-size: clamp(11px, 3vw, 13px);
-    white-space: nowrap;
-    flex: 0 0 auto;
   }
 }
 
+/* 초소형 기기 미세 튜닝 */
 @media (max-width: 360px){
-  .navRight a{ padding: 5px 4px; font-size: 11px; }
+  .navRight a{ padding: 5px 5px; font-size: 11px; }
   .user{ max-width: 26vw; }
 }

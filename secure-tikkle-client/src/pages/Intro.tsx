@@ -68,12 +68,10 @@ export default function Intro() {
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <h1 className={styles.title}>
-            작은 절약이 쌓여 
-            <span className={styles.accent}> 큰 목표</span>가 됩니다.
+            작은 절약이 쌓여
+            <br className={styles.brMobile} />
+            <span className={styles.accent}>큰 목표</span>가 됩니다.
           </h1>
-          <p className={styles.subtitle}>
-            티끌을 기록하고, 목표를 달성해보세요 ! 
-          </p>
 
           <div
             className={styles.glassWrap}
@@ -129,7 +127,8 @@ export default function Intro() {
       <section className={`${styles.band} ${styles.reveal}`}>
         <div className={styles.bandInner}>
           <h2>돈 관리, 어렵지 않게.</h2>
-          <p>불필요한 요소를 덜고 핵심만 남겼습니다. 보기 쉽고 쓰기 쉬운 경험을 제공합니다.</p>
+          <p>불필요한 요소를 덜고 핵심만 남겼습니다. </p> 
+          <p>보기 쉽고 쓰기 쉬운 경험을 제공합니다.</p>
         </div>
       </section>
 

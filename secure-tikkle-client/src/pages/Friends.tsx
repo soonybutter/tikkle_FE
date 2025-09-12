@@ -61,7 +61,7 @@ export default function Friends() {
     [invite?.code]
   );
 
-  // Kakao 공유 (없으면 클립보드 복사로 폴백)
+  /* Kakao 공유 (없으면 클립보드 복사로 폴백)
    async function shareInvite() {
     if (!inviteUrl) return;
     const key = import.meta.env.VITE_KAKAO_JS_KEY as string | undefined;
@@ -100,6 +100,7 @@ export default function Friends() {
       alert('공유 중 문제가 있어 링크를 복사했어요!');
     }
   }
+    */
 
   return (
     <main className={`container ${styles.page}`}>
@@ -198,9 +199,11 @@ export default function Friends() {
                     <button className={styles.btn} onClick={() => navigator.clipboard.writeText(inviteUrl)}>
                       복사
                     </button>
+                    {/*
                     <button className={styles.btn} onClick={shareInvite}>
                       카카오로 공유
                     </button>
+                    */}
                   </>
                 )}
                 <button
