@@ -1,0 +1,318 @@
+.main {
+  min-height: 100svh;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 12px;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, #fff8f9 0%, transparent 60%),
+    radial-gradient(900px 400px at 110% 0%, #fffef4 0%, transparent 55%),
+    #ffffff;
+}
+
+/* 헤더 영역 */
+.headerRow {
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.linkBack {
+  text-decoration: none;
+  color: #374151;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: .92rem;
+}
+
+.linkBack:hover { 
+  background: #e8eaee; 
+}
+
+.title { 
+  margin: 14px 0 10px; 
+  font-weight: 600;
+}
+
+.amount { 
+  margin: 10px 0 16px; 
+}
+
+.progressWrap { 
+  gap: 8px; 
+  margin: 0 0 18px; 
+}
+
+.progressTrack {
+  width: 100%;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  background: linear-gradient(135deg, #ff6ea6 0%, #F5276C 100%);
+  border-radius: 999px;
+  transition: width .25s ease;
+}
+.progressText { color: #6b7280; font-size: .9rem; }
+
+/* 폼 — 하단선 인풋 */
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 10px;
+  margin: 12px 0;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  padding: 12px;
+}
+
+.input {
+  appearance: none;
+  width: 100%;
+  height: 34px;      
+  padding: 4px 2px;  
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid #e5e7eb;
+  border-radius: 0;
+  font-size: .95rem;
+  transition: border-color .15s ease;
+  
+}
+.input:hover { border-bottom-color: #d1d5db; }
+.input:focus { outline: none; border-bottom-color: #F5276C; }
+.input::placeholder { color: #9ca3af; }
+
+
+.inputSm {
+  appearance: none;
+  width: 100%;
+  height: 30px;     
+  padding: 3px 2px;  
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid #e5e7eb;
+  border-radius: 0;
+  font-size: .9rem;
+  transition: border-color .15s ease;
+}
+.inputSm:hover { border-bottom-color: #d1d5db; }
+.inputSm:focus { outline: none; border-bottom-color: #F5276C; }
+
+/* 숫자 스핀 제거 */
+.input[type="number"]::-webkit-outer-spin-button,
+.input[type="number"]::-webkit-inner-spin-button,
+.inputSm[type="number"]::-webkit-outer-spin-button,
+.inputSm[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.input[type="number"], .inputSm[type="number"] { -moz-appearance: textfield; }
+
+/* 버튼 */
+.btnPrimary,
+.btnPrimarySm {
+  border: 0;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform .08s ease, filter .2s ease, opacity .2s ease, box-shadow .2s ease;
+  background: linear-gradient(135deg, #ff6ea6 0%, #F5276C 100%);
+  box-shadow: 0 12px 24px rgba(245,39,108,.22);
+  
+}
+
+.btnPrimary   { 
+  height: 38px; 
+  padding: 0 14px; 
+  border-radius: 12px; 
+  font-size: .98rem; 
+  margin-top:8px; 
+}
+
+.btnPrimarySm { 
+  height: 34px; 
+  padding: 0 12px; 
+  border-radius: 10px; 
+  font-size: .9rem; 
+  margin-top:8px;
+}
+
+.btnPrimary:hover:not(:disabled),
+.btnPrimarySm:hover:not(:disabled) {
+   transform: translateY(-1px); 
+   filter: brightness(1.03); 
+  }
+
+.btnPrimary:active:not(:disabled),
+.btnPrimarySm:active:not(:disabled) {
+   transform: translateY(0); 
+}
+
+.btnPrimary:disabled,
+.btnPrimarySm:disabled { 
+  opacity: .55; 
+  cursor: not-allowed; 
+  box-shadow: none; 
+}
+
+.btnGhost, .btnGhostDanger, .btnGhostSm {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #111827;
+  border-radius: 10px;
+  height: 30px;
+  padding: 0 10px;
+  cursor: pointer;
+  font-size: .9rem;
+  margin-top:8px; 
+}
+.btnGhost:hover, .btnGhostSm:hover { background: #f9fafb; }
+
+.btnGhostSm { 
+  height: 34px; 
+  
+}
+
+.btnPrimary,
+.btnDanger {
+  height: 30px;          
+  padding: 0 10px;       
+  border-radius: 10px;   
+  font-size: .9rem;      
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnDanger {
+  border: 1px solid #fecaca;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.btnDanger:hover { background: #ffe4e6; }
+
+.btnGhostDanger {
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+.btnGhostDanger:hover { background: #fff1f2; }
+
+/* 에러 알림(GoalNew 스타일 계열) */
+.error {
+  margin: 6px 0;
+  color: #c026d3;
+  background: #fdf4ff;
+  border: 1px solid #f5d0fe;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: .92rem;
+}
+
+/* 로그 리스트 카드 */
+.h2 { margin: 14px 0 8px; }
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  overflow: hidden;
+}
+.item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 8px;
+  padding: 12px 12px;
+  border-bottom: 1px solid #eee;
+}
+.item:last-child { border-bottom: 0; }
+
+.logMain { display: grid; gap: 4px; }
+.logSummary { color: #111827; }
+.logMemo { color: #374151; }
+
+.time {
+  display: block;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.logActions {
+  justify-self: end;  /* 그리드 아이템이라면 오른쪽 끝 */
+  margin-left: auto;  /* 혹시 플렉스 컨텍스트라면 자동 여백으로 오른쪽 밀기 */
+}
+
+/* 인라인 수정 행 */
+.editRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.editActions {
+  display: flex;
+  gap: 6px;
+  grid-column: 3;     
+  justify-self: end;  
+}
+
+/* 상단 ‘목표 수정’ 카드 */
+.editCard {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 14px;
+  padding: 12px;
+  margin: 10px 0 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+}
+.editRow2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.editLabel { display: grid; gap: 6px; font-size: .95rem; }
+
+/* 접근성 포커스 */
+.linkBack:focus-visible,
+.btnPrimary:focus-visible,
+.btnPrimarySm:focus-visible,
+.btnGhost:focus-visible,
+.btnGhostSm:focus-visible,
+.btnGhostDanger:focus-visible,
+.btnDanger:focus-visible,
+.input:focus-visible,
+.inputSm:focus-visible {
+  outline: 0.8px solid #ffffff;
+  outline-offset: 2px;
+  
+}
+
+.form .btnPrimary,
+.form .btnPrimarySm,
+.form .btnGhost,
+.form .btnGhostSm,
+.form .btnDanger {
+  justify-self: end;  /* 각 버튼이 자신의 그리드 셀 오른쪽으로 */
+}
+
+/* 반응형 */
+@media (max-width: 680px) {
+  .editActions {
+    grid-column: 1;   /* 한 칼럼 레이아웃에서는 1로 되돌림 */
+    justify-self: end;
+  }
+}

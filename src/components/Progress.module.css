@@ -1,0 +1,22 @@
+.wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.track { 
+  height: 14px;  
+}
+
+.bar   { 
+  height: 100%; 
+  border-radius: 999px; 
+}
+
+.label {
+  font-size: .85rem;
+  color: #666;
+  min-width: 42px;
+  text-align: right;
+}

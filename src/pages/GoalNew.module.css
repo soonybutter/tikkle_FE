@@ -1,0 +1,202 @@
+.main {
+  min-height: 100svh;            
+  display: grid;
+  place-items: center;
+  padding: 24px 12px;            
+  background:
+    radial-gradient(1200px 500px at 10% -10%, #fff8f9 0%, transparent 60%),
+    radial-gradient(900px 400px at 110% 0%, #fffef4 0%, transparent 55%),
+    #ffffff;
+}
+
+.card {
+  width: 100%;
+  max-width: 560px;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 22px 60px rgba(0,0,0,.12);
+  padding: 18px 16px 16px;
+  margin-bottom: 100px;
+  margin-right:10px;
+  margin-left:10px
+}
+
+.hero {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.ring {
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: radial-gradient(120px 70px at 50% -15%, #fef3c7, transparent), #fff7ed;
+  border: 1px solid #fde68a;
+  box-shadow: inset 0 0 0 6px rgba(255,255,255,0.6);
+}
+
+.emoji {
+  font-size: 52px;
+  line-height: 1;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,.15));
+  user-select: none;
+}
+
+.title {
+  margin: 6px 0 0;
+  font-size: clamp(1.4rem, 1.2vw + 1rem, 1.8rem);
+  font-weight: 800;
+}
+
+.subtitle {
+  color: #4b5563;
+  margin: 2px 0 6px;
+  line-height: 1.5;
+  font-size: .98rem;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.label { display: grid; gap: 8px; }
+
+.labelText {
+  font-weight: 700;
+  font-size: .95rem;
+}
+
+.input {
+  appearance: none;
+  width: 100%;
+  height: 38px;
+  padding: 6px 2px;            
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid #e5e7eb; 
+  border-radius: 0;
+  font-size: .95rem;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.input:hover {
+  border-bottom-color: #d1d5db;
+}
+
+.input:focus {
+  outline: none;
+  border-bottom-color: #F5276C;      
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+
+/* 비활성화 */
+.input:disabled {
+  opacity: .6;
+  border-bottom-color: #e5e7eb;
+}
+
+/* 숫자 스핀버튼 제거 (선 아래만 보이게) */
+.input[type="number"]::-webkit-outer-spin-button,
+.input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.input[type="number"] { -moz-appearance: textfield; }
+
+.help {
+  color: #6b7280;
+  font-size: .85rem;
+}
+
+.inlineMeta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #4b5563;
+  font-size: .85rem;
+}
+
+.tipDot { opacity: .5; }
+.muted { color: #6b7280; }
+
+.error {
+  margin-top: 2px;
+  color: #c026d3;
+  background: #fdf4ff;
+  border: 1px solid #f5d0fe;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: .92rem;
+}
+
+.submit {
+  height: 40px;                  
+  border: 0;
+  border-radius: 12px;           
+  color: #fff;
+  font-weight: 800;
+  font-size: .98rem;
+  cursor: pointer;
+  transition: transform .08s ease, box-shadow .2s ease, opacity .2s ease, filter .2s ease;
+}
+
+.submitBerry {
+  background: linear-gradient(135deg, #ff6ea6 0%, #F5276C 100%);
+  box-shadow: 0 12px 24px rgba(245,39,108,.26);
+}
+.submitBerry:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.03); }
+.submitBerry:active:not(:disabled){ transform: translateY(0); }
+
+.submit:hover:not(:disabled) {
+  transform: translateY(+3px);
+  
+}
+
+.submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.footNote {
+  margin-top: 8px;
+  text-align: center;
+  color: #6b7280;
+  font-size: .85rem;
+}
+
+.footerLinks {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.linkBtn {
+  text-decoration: none;
+  color: #111827;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: .9rem;
+  transition: background .15s ease, transform .08s ease;
+}
+
+.linkBtn:hover {
+  background: #e8eaee;
+  transform: translateY(-1px);
+}

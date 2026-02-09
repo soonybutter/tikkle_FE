@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'Suit';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Thin.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --page-gutter: clamp(16px, 4vw, 32px);
+  --page-max: 1200px; 
+}
+
+html, body {
+  font-family: var(--app-font);
+  padding-inline: var(--page-gutter);
+}
+
+.app-container {
+  max-width: var(--page-max);
+  margin-inline: auto;
+  width: 100%;
+}
+
+:where(body, button, input, textarea, select) { font-family: inherit; }
